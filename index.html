@@ -182,23 +182,6 @@ section.view{padding-block:18px 26px}
   /* the margins search is a table's worth of cards; give it two columns */
   #pResults{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:10px;align-items:start}
   #pResults .card{margin:0}
-  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
-  .chip{font:500 11px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;
-        padding:7px 10px;border-radius:999px;border:1px solid var(--line);
-        background:var(--sink);color:var(--muted);cursor:pointer;white-space:nowrap}
-  .chip:hover{border-color:var(--muted);color:var(--ink)}
-  .chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
-  .pcard-h{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
-  .pcard-h img{width:56px;height:56px;object-fit:cover;border-radius:5px;flex:none;background:var(--sink)}
-  .pname{font-weight:600;font-size:14px;line-height:1.25}
-  .pname a{color:inherit;text-decoration:none;border-bottom:1px solid transparent}
-  .pname a:hover{border-bottom-color:var(--brand);color:var(--brand)}
-  .vtable{margin-top:10px;border-top:1px solid var(--line);font:400 12px/1.45 var(--mono)}
-  .vrow{display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:7px 0;
-        border-bottom:1px solid var(--line);align-items:baseline}
-  .vrow:last-child{border-bottom:0}
-  .vrow .vt{color:var(--ink);min-width:0;overflow-wrap:anywhere}
-  .vrow .vs{color:var(--faint);font-size:11px}
   @media(max-width:520px){ #pResults{grid-template-columns:1fr} }
   #notesList{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
   #notesList .card{margin:0}
@@ -207,6 +190,98 @@ section.view{padding-block:18px 26px}
   #orderDetail .card{margin:0}
 }
 @media(min-width:1280px){ .wrap{max-width:1240px} }
+
+/* ---- catalogue -------------------------------------------------------------
+   These were written inside the 900px query, so a phone got unstyled filter
+   chips and an unstyled variant table, and three of them named --mono, --line
+   and --brand, which are not variables in this sheet. Both faults were silent:
+   an unknown custom property just resolves to nothing. */
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+.chip{font-family:var(--m);font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;
+      padding:7px 10px;border-radius:999px;border:1px solid var(--hair);
+      background:var(--sink);color:var(--muted);cursor:pointer;white-space:nowrap}
+.chip:hover{border-color:var(--muted);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.pcard-h{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+.pcard-h img{width:56px;height:56px;object-fit:cover;border-radius:5px;flex:none;background:var(--sink)}
+.pname{font-weight:600;font-size:14px;line-height:1.25}
+.pname a{color:inherit;text-decoration:none;border-bottom:1px solid transparent}
+.pname a:hover{border-bottom-color:var(--red);color:var(--red)}
+.vtable{margin-top:10px;border-top:1px solid var(--rule);font-family:var(--m);font-size:12px;line-height:1.45}
+.vrow{display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:7px 0;
+      border-bottom:1px solid var(--rule);align-items:baseline}
+.vrow:last-child{border-bottom:0}
+.vrow .vt{color:var(--ink);min-width:0;overflow-wrap:anywhere}
+.vrow .vs{color:var(--faint);font-size:11px}
+
+/* ---- stat tile -------------------------------------------------------------
+   costStats has always rendered .stat and nothing has ever styled it, so the
+   four headline numbers on the Costs tab floated on the page background with
+   no card under them. */
+.stat{background:var(--raise);border:1px solid var(--hair);border-radius:7px;padding:14px 15px}
+
+/* ---- a table that reads like Google's own ---------------------------------
+   Same column order Google Ads uses, so the two can be compared by eye without
+   translating. It scrolls sideways inside its own box; the page never does. */
+.gt{overflow-x:auto;margin:0 -15px;padding:2px 15px 0}
+.gt table{border-collapse:collapse;width:100%;min-width:680px;
+          font-family:var(--m);font-size:12.5px;font-variant-numeric:tabular-nums}
+.gt th{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);
+       font-weight:500;text-align:right;padding:0 0 8px 12px;white-space:nowrap;
+       border-bottom:1px solid var(--hair)}
+.gt th:first-child,.gt td:first-child{text-align:left;padding-left:0}
+.gt td{text-align:right;padding:10px 0 10px 12px;border-bottom:1px solid var(--rule);white-space:nowrap}
+.gt tbody tr:last-child td{border-bottom:0}
+.gt tr.tot td{border-top:1px solid var(--ink);border-bottom:0!important;font-weight:700;padding-top:11px}
+.gt .cname{font-family:var(--f);font-weight:600;font-size:13.5px;white-space:normal;min-width:158px;line-height:1.3}
+.gt .off td{color:var(--faint)}
+.gt .off .cname{color:var(--muted)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px;flex:none}
+
+/* ---- daily chart, in divs rather than SVG ---------------------------------
+   An SVG scaled to the container scales its labels too, and at phone width the
+   axis became unreadable. Divs keep type at the size it was set. */
+.chart{display:flex;gap:9px;align-items:stretch;margin:6px 0 2px}
+.ch-y{display:flex;flex-direction:column;justify-content:space-between;height:104px;
+      font-family:var(--m);font-size:9.5px;color:var(--faint);text-align:right;flex:none}
+.ch-cols{display:flex;gap:5px;flex:1;align-items:flex-end;min-width:0}
+.ch-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+.ch-stack{width:100%;height:104px;display:flex;flex-direction:column;justify-content:flex-end;
+          border-radius:3px 3px 0 0;overflow:hidden;background:var(--sink)}
+.ch-stack span{display:block;width:100%}
+.ch-col em{font-style:normal;font-family:var(--m);font-size:9.5px;color:var(--faint);white-space:nowrap}
+
+/* ---- proportion bar and its key ---- */
+.bar{display:flex;height:13px;border-radius:3px;overflow:hidden;background:var(--sink);margin:13px 0 11px}
+.bar span{display:block;height:100%}
+.key{display:flex;flex-wrap:wrap;gap:7px 18px;font-size:12.5px}
+.key i{font-style:normal;display:flex;align-items:center;gap:7px;color:var(--muted)}
+.key b{font-family:var(--m);color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+
+/* ---- progress toward the point where a zero means something ---- */
+.prog{height:8px;border-radius:4px;background:var(--sink);overflow:hidden;margin:9px 0 7px}
+.prog span{display:block;height:100%;background:var(--red)}
+
+/* ---- grouped ledger, collapsed by default ---- */
+.grp{margin-bottom:8px}
+.grp>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;
+  align-items:baseline;gap:12px;padding:12px 14px;background:var(--raise);
+  border:1px solid var(--hair);border-radius:7px}
+.grp[open]>summary{border-radius:7px 7px 0 0;border-bottom:0}
+.grp>summary::-webkit-details-marker{display:none}
+.grp>summary::marker{content:""}
+.grp .gname{font-weight:600;font-size:14.5px;display:flex;align-items:center;min-width:0}
+.grp .gamt{font-family:var(--m);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.gbody{border:1px solid var(--hair);border-top:0;border-radius:0 0 7px 7px;
+  padding:2px 14px 8px;background:var(--raise)}
+.line{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 0;border-bottom:1px dotted var(--rule)}
+.line:last-child{border-bottom:0}
+.line .n{font-size:13.5px;font-weight:500;line-height:1.3}
+.line .v{font-family:var(--m);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
+.line .e{grid-column:1/-1;font-size:11.5px;color:var(--faint);display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:1px}
+.hero{background:var(--raise);border:1px solid var(--hair);border-radius:7px;padding:17px 16px;margin-bottom:10px}
+.hero .big{font-size:38px}
+@media(min-width:900px){ .hero .big{font-size:46px} }
 
 /* ---- worklist rows ---- */
 .wrow{
@@ -334,9 +409,30 @@ section.view{padding-block:18px 26px}
 
   <!-- ---------------- COSTS ---------------- -->
   <section class="view wrap" id="v-costs" hidden>
-    <div class="vh"><h2>Costs</h2></div>
-    <button class="btn" id="addExpBtn" style="width:100%;margin-bottom:12px">Add an expense</button>
+    <div class="vh"><h2>Costs</h2><span class="sub" id="costStamp">&mdash;</span></div>
 
+    <div id="costHero"><div class="hero"><div class="empty">Loading<span class="spin" style="margin-left:8px"></span></div></div></div>
+    <div class="stats" id="costStats"></div>
+
+    <div class="cols">
+      <div>
+        <div class="colhead"><h3>Where the money went</h3><span class="n" id="costGroupsN"></span></div>
+        <div id="costGroups"></div>
+      </div>
+      <div>
+        <div class="colhead"><h3>Committed every month</h3><span class="n" id="runN"></span></div>
+        <div class="card" id="recurCard"><div class="empty">&mdash;</div></div>
+
+        <div class="colhead"><h3>What the audit corrected</h3></div>
+        <div class="card" id="auditCard"><div class="empty">&mdash;</div></div>
+
+        <div class="colhead"><h3>Not charged to Cheragh</h3></div>
+        <div class="card" id="excludedCard"><div class="empty">&mdash;</div></div>
+      </div>
+    </div>
+
+    <div class="colhead"><h3>Add a cost by hand</h3></div>
+    <button class="btn ghost" id="addExpBtn" style="width:100%;margin-bottom:10px">Add an expense</button>
     <form class="card" id="expForm" hidden>
       <div id="expMsg"></div>
       <label class="field"><span>What was it</span><input id="eName" required placeholder="Shopify Basic"></label>
@@ -352,33 +448,19 @@ section.view{padding-block:18px 26px}
           <option value="quarterly">Quarterly</option><option value="daily">Daily</option>
         </select></label>
       </div>
-      <label class="field"><span>Date</span><input id="eDate" type="date" required></label>
+      <div class="inline">
+        <label class="field"><span>Date</span><input id="eDate" type="date" required></label>
+        <label class="field"><span>Cheragh's share</span><select id="eAlloc">
+          <option value="1" selected>All of it</option><option value="0.5">Half, shared</option>
+          <option value="0">None yet, decide later</option>
+        </select></label>
+      </div>
       <div style="display:flex;gap:8px">
         <button class="btn" type="submit" style="flex:1" id="eSave">Save</button>
         <button class="btn ghost" type="button" id="eCancel">Cancel</button>
       </div>
-      <p class="tiny faint" style="margin:10px 0 0">A recurring one is saved as a run rate and posts itself. A one off is saved as cash on that date.</p>
+      <p class="tiny faint" style="margin:10px 0 0">Recurring saves a run rate and posts the first payment. One off saves cash on that date. Anything you type here is marked unverified until an invoice backs it.</p>
     </form>
-
-    <div class="stats" id="costStats"></div>
-    <p class="tiny faint" style="margin:-2px 0 14px">Cash and commitment are never added together. One is money gone, the other is a rate.</p>
-
-    <div class="twocol">
-      <div>
-        <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">Where it went this month</h2></div>
-        <div class="card" id="catCard"><div class="empty">&mdash;</div></div>
-
-        <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">Recent payments</h2></div>
-        <div class="card" id="entriesCard"><div class="empty">&mdash;</div></div>
-      </div>
-      <div>
-        <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">Committed every month</h2></div>
-        <div class="card" id="recurCard"><div class="empty">&mdash;</div></div>
-
-        <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">Advertising</h2></div>
-        <div class="card" id="adsCostCard"><div class="empty">&mdash;</div></div>
-      </div>
-    </div>
   </section>
 
   <!-- ---------------- PRODUCTS ---------------- -->
@@ -392,13 +474,16 @@ section.view{padding-block:18px 26px}
 
   <!-- ---------------- ADS ---------------- -->
   <section class="view wrap" id="v-ads" hidden>
-    <div class="vh"><h2>Ads</h2><span class="sub">read only</span></div>
-    <div class="card" id="adsCard"><div class="empty">&mdash;</div></div>
+    <div class="vh"><h2>Ads</h2><span class="sub" id="adsStamp">&mdash;</span></div>
+    <div id="adsHead"></div>
+    <div id="adsChart"></div>
+    <div id="adsTable"></div>
+    <div id="adsDetail"></div>
     <div class="card">
       <div class="lbl" style="margin-bottom:8px">Standing rules</div>
       <p class="tiny" style="margin:0 0 8px"><strong>Never press Google's Fix it.</strong> All three of its suggestions on this account would have broken it.</p>
-      <p class="tiny" style="margin:0 0 8px"><strong>No changes until the read point.</strong> Break-even conversion rate is 0.56%, so a zero tells you nothing before roughly 531 clicks.</p>
-      <p class="tiny" style="margin:0"><strong>Google's conversions and your order count will never match.</strong> Order #1005 left no session at all, so Google cannot claim it. Both numbers are shown, neither is reconciled.</p>
+      <p class="tiny" style="margin:0 0 8px"><strong>Nothing changes before the read point.</strong> Each campaign shows its own: below it, zero conversions is not evidence of anything.</p>
+      <p class="tiny" style="margin:0"><strong>Google's conversions and your order count will never match.</strong> The tag does not load until a visitor accepts cookies, so Google cannot claim an order it never saw. Both numbers are shown and neither is reconciled to the other.</p>
     </div>
   </section>
 
@@ -437,8 +522,9 @@ const KEY = "sb_publishable_iN0Bm1oZKEhixkmBZNNS-A_lDhRnPmE";
 const EURGBP = 0.866;   /* multiply EUR by this to get GBP */
 /* Shopify Payments settles in euros, so euros are what actually lands in the
    bank. Divide, never multiply: GBP 89.12 / 0.866 = EUR 102.91. */
-const eur = v => (v==null||v==="") ? "" : "\u20ac" + (Math.round((+v/EURGBP)*100)/100)
-  .toLocaleString("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2});
+const eur = v => (v==null||v==="") ? "" :
+  ((+v<0?"\u2212":"") + "\u20ac" + Math.abs(Math.round((+v/EURGBP)*100)/100)
+    .toLocaleString("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2}));
 
 let TOK = null, REF = null, CATS = [], STATE = {};
 
@@ -586,12 +672,24 @@ async function loadToday(){
 
   const thisMonth = (spent||[]).find(s => s.month === new Date().toISOString().slice(0,8)+"01");
   el("kSpent").textContent = gbp0(thisMonth ? thisMonth.spent_gbp : 0);
+  el("kSpent").title = "Cash out this month, including costs shared with Elais that are not charged to Cheragh. The Costs tab splits them.";
   const b = (burn||[])[0];
   el("kBurn").textContent = b && b.daily_burn_gbp
     ? `${gbp(b.daily_burn_gbp)} a day committed` : "no recurring costs entered yet";
 
   // Campaign ledger. Ads spend comes from ad_days when the script is running.
   const ads = await get("ad_days?select=cost_gbp,clicks,conversions,day&order=day.desc").catch(()=>[]);
+  /* Break-even conversion rate is NOT a constant. It is cost per click over
+     contribution, and the cost per click has moved 0.49 -> 0.97 -> 0.57 euros
+     inside a week. This tile used to print 0.56% no matter what, which was true
+     for one day in September. ad_campaigns recomputes it from live numbers. */
+  const cstats = await get("ad_campaigns?select=cost_gbp,clicks,breakeven_cvr_pct,status").catch(()=>[]);
+  const beClicks = (cstats||[]).reduce((a,c)=>a+(+c.clicks||0),0);
+  const be = beClicks
+    ? (cstats||[]).reduce((a,c)=>a+(+c.breakeven_cvr_pct||0)*(+c.clicks||0),0)/beClicks/100
+    : 0.0056;
+  const cost = await get("cost_summary?select=*").catch(()=>[]);
+  const CS = (cost||[])[0] || {};
   const adSpend = (ads||[]).reduce((a,d)=>a+(+d.cost_gbp||0),0);
   const clicks  = (ads||[]).reduce((a,d)=>a+(+d.clicks||0),0);
   /* Sessions, not clicks: Google counts a click before the cookie banner and
@@ -607,6 +705,7 @@ async function loadToday(){
   const ordersSince = campStart
     ? orders.filter(o => (o.created_at||"").slice(0,10) >= campStart).length
     : orders.length;
+  const netAll = (CS.net_gbp != null) ? +CS.net_gbp : (profit - adSpend);
   const last = orders.length ? orders[0] : null;
   const daysSince = last ? Math.floor((Date.now()-new Date(last.created_at))/864e5) : null;
   el("campaignLedger").innerHTML = [
@@ -616,10 +715,17 @@ async function loadToday(){
       : `<div><span class="k">Advertising spent</span><span class="faint">not reporting yet</span></div>`,
     (ads&&ads.length) ? row("Clicks", clicks.toLocaleString("en-GB")) : "",
     sess ? row("Visitors who arrived", sess.toLocaleString("en-GB")) : "",
-    sess ? row("Conversion rate", pct(100*ordersSince/sess) + ' <span class="faint">vs 0.56% break-even</span>',
-               (ordersSince/sess) >= 0.0056 ? "pos" : "neg") : "",
+    sess ? row("Conversion rate", (100*ordersSince/sess).toFixed(2) + "%" +
+               ` <span class="faint">vs ${(be*100).toFixed(2)}% break-even</span>`,
+               (ordersSince/sess) >= be ? "pos" : "neg") : "",
     row("Days since the last order", daysSince==null?"—":String(daysSince)),
-    (ads&&ads.length) ? `<div class="tot"><span class="k">Net</span><span class="${profit-adSpend>=0?'pos':'neg'}">${gbp(profit-adSpend)} <span class="faint" style="font-size:12px">${eur(profit-adSpend)}</span></span></div>` : "",
+    /* Overheads are a real cost and leaving them out was flattering. The
+       prepaid AI credit is deliberately excluded: the cash has gone but the
+       expense has not happened, so charging it here would overstate the loss
+       by more than four hundred pounds. cost_summary draws that line. */
+    (CS.overhead_recognized_gbp != null)
+      ? row("Overheads consumed", gbp(CS.overhead_recognized_gbp), "neg") : "",
+    (ads&&ads.length) ? `<div class="tot"><span class="k">Net</span><span class="${netAll>=0?'pos':'neg'}">${gbp(netAll)} <span class="faint" style="font-size:12px">${eur(netAll)}</span></span></div>` : "",
   ].join("");
 
   el("kOrders").textContent = String(orders.length);
@@ -852,72 +958,201 @@ function feeName(x){
 }
 
 /* ---------- costs ---------- */
+/* ------------------------------------------------------------------- costs
+   Rebuilt 2026-09-10 on the verified inbox audit.
+
+   The old tab summed expense_entries and called the answer spend. That was
+   wrong in three directions at once and every one of them made a real number
+   worse rather than rounder:
+
+     it charged Cheragh the whole Xolo and Canva bill, which is shared;
+     it counted prepaid OpenAI and Anthropic balance as an expense that had
+       already happened, when it is cash out and expense later;
+     it counted the supplier payment for #1005 here as well as inside that
+       order's own profit.
+
+   cost_summary does the arithmetic in the database so the desk, ChatGPT and
+   any future query all read one definition. This function only lays it out. */
+
+const CGRP = {
+  ads:      { name:"Advertising",            hue:"var(--red)" },
+  prepaid:  { name:"Prepaid, not used yet",  hue:"var(--warn)" },
+  overhead: { name:"Overheads",              hue:"var(--muted)" },
+  order:    { name:"Cost of the orders",     hue:"var(--go)" },
+  shared:   { name:"Shared, not yours alone", hue:"var(--faint)" },
+};
+
+function line(name, value, extra){
+  return `<div class="line"><span class="n">${name}</span><span class="v">${value}</span>
+    ${extra ? `<span class="e">${extra}</span>` : ""}</div>`;
+}
+function group(key, total, body, count, note, open){
+  const g = CGRP[key];
+  return `<details class="grp"${open?" open":""}>
+    <summary>
+      <span class="gname"><span class="dot" style="background:${g.hue}"></span>${esc(g.name)}
+        <span class="faint" style="font-weight:400;font-size:12px;margin-left:8px">${esc(count)}</span></span>
+      <span class="gamt">${gbp(total)}</span>
+    </summary>
+    <div class="gbody">${body}${note?`<p class="tiny faint" style="margin:9px 0 2px">${note}</p>`:""}</div>
+  </details>`;
+}
+
 async function loadCosts(){
-  const month = new Date().toISOString().slice(0,8)+"01";
-  const [cats, byCat, entries, recur, ads] = await Promise.all([
+  const [sum, ledger, recur, cats, camps, setting] = await Promise.all([
+    get("cost_summary?select=*"),
+    get("cost_ledger?select=*&order=allocated_gbp.desc"),
+    get("expenses?select=*&active=eq.true&order=monthly_gbp.desc"),
     get("expense_categories?select=*&active=eq.true&order=sort"),
-    get(`expense_by_category?select=*&month=eq.${month}`),
-    get("expense_entries?select=id,name,incurred_on,amount,currency,amount_gbp,source,category_id&order=incurred_on.desc&limit=25"),
-    get("expenses?select=*&active=eq.true&order=amount_gbp.desc"),
-    /* Advertising is never retyped as an expense. It arrives hourly from the Ads
-       Script and is shown from ad_days, so it can neither drift from the real
-       number nor be counted twice. */
-    get("ad_days?select=cost_gbp,day&order=day.desc").catch(()=>[]),
+    get("ad_campaigns?select=*&order=cost_gbp.desc").catch(()=>[]),
+    get("store_settings?select=value&key=eq.cost_audit").catch(()=>[]),
   ]);
+  const s = (sum||[])[0] || {};
+  const L = ledger || [];
+  const audit = ((setting||[])[0]||{}).value || {};
+
   CATS = cats;
   el("eCat").innerHTML = cats.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
   const byId = Object.fromEntries(cats.map(c=>[c.id,c.name]));
 
-  /* A run rate and a payment are different kinds of number and summing them
-     produces something true of nothing, so they are totalled separately and
-     labelled as what they are. */
-  const monthAds  = (ads||[]).filter(a => (a.day||"").slice(0,7) === month.slice(0,7))
-                             .reduce((t,a) => t + (+a.cost_gbp||0), 0);
-  const monthCash = (byCat||[]).reduce((t,c) => t + (+c.spent_gbp||0), 0);
-  const perMonth  = (recur||[]).reduce((t,r) => {
-    const n = {daily:30.44, weekly:4.348, fortnightly:2.174, monthly:1,
-               quarterly:1/3, annual:1/12, once:0}[r.frequency] ?? 0;
-    return t + (+r.amount_gbp||0) * n;
-  }, 0);
+  const total = +s.total_allocated_gbp || 0;
+  const ads   = +s.ads_gbp || 0;
+  const prep  = +s.prepaid_gbp || 0;
+  const rec   = +s.overhead_recognized_gbp || 0;
+  const ord   = +s.per_order_gbp || 0;
+  const share = +s.unallocated_gbp || 0;
+  const net   = +s.net_gbp || 0;
+  const verified = L.filter(r => r.verified).length;
+
+  /* ---- the one number, then what it is made of ---- */
+  el("costHero").innerHTML = `<div class="hero">
+    <div class="lbl">What Cheragh has cost, all in</div>
+    <div class="big">${gbp(total)}</div>
+    <div class="tiny muted" style="margin-top:4px">
+      ${eur(total)} &middot; since 16 August &middot;
+      <span class="mono">${verified} of ${L.length}</span> lines backed by a named invoice</div>
+    <div class="bar">
+      ${[[ads,CGRP.ads.hue],[prep,CGRP.prepaid.hue],[rec,CGRP.overhead.hue],[ord,CGRP.order.hue]]
+        .filter(([v])=>v>0)
+        .map(([v,h])=>`<span style="width:${(100*v/total).toFixed(2)}%;background:${h}"></span>`).join("")}
+    </div>
+    <div class="key">
+      <i><span class="dot" style="background:${CGRP.ads.hue}"></span>Advertising <b>${gbp0(ads)}</b></i>
+      <i><span class="dot" style="background:${CGRP.prepaid.hue}"></span>Prepaid credit <b>${gbp0(prep)}</b></i>
+      <i><span class="dot" style="background:${CGRP.overhead.hue}"></span>Overheads <b>${gbp0(rec)}</b></i>
+      <i><span class="dot" style="background:${CGRP.order.hue}"></span>The orders <b>${gbp0(ord)}</b></i>
+    </div>
+    <p class="tiny" style="margin:13px 0 0;padding-top:12px;border-top:1px solid var(--rule)">
+      <strong>${gbp(s.gross_profit_gbp)} earned, ${gbp(Math.abs(net))} ${net<0?"behind":"ahead"}.</strong>
+      <span class="muted">Gross profit on real orders, less advertising and less the overhead that has
+      actually been consumed. The ${gbp0(prep)} of unused credit is deliberately not counted against you:
+      the cash has gone but the expense has not happened.</span></p>
+  </div>`;
 
   el("costStats").innerHTML = [
-    ["Paid out this month", gbp(monthCash + monthAds), eur(monthCash + monthAds),
-     "cash that actually left, advertising included"],
-    ["Advertising this month", gbp(monthAds), eur(monthAds),
-     "straight from Google, hourly"],
-    ["Committed every month", gbp(perMonth), eur(perMonth),
-     "a run rate, not a payment"],
-    ["Per day", gbp((perMonth + monthAds*30.44/(new Date().getDate()))/30.44), "",
-     "subscriptions plus advertising at today's pace"],
+    ["Hit the books", gbp(rec + ads), eur(rec + ads), "overheads consumed plus advertising"],
+    ["Prepaid, unused", gbp(prep), eur(prep), "OpenAI and Anthropic balance still on account"],
+    ["Shared, undecided", gbp(share), eur(share), "yours and Elais's, not split yet"],
+    ["Every month", gbp(s.run_rate_monthly_gbp), eur(s.run_rate_monthly_gbp),
+     (+s.run_rate_shared_gbp) ? `plus ${gbp(s.run_rate_shared_gbp)} shared, unallocated` : "committed, before advertising"],
   ].map(([k,v,e,note]) => `<div class="stat">
-      <div class="lbl">${esc(k)}</div>
-      <div class="big">${v}</div>
+      <div class="lbl">${esc(k)}</div><div class="big sm">${v}</div>
       <div class="tiny faint">${e?esc(e)+" &middot; ":""}${esc(note)}</div>
     </div>`).join("");
 
-  el("adsCostCard").innerHTML = monthAds
-    ? `<div class="ledger">
-         ${row("This month", gbp(monthAds) + ' <span class="faint">' + eur(monthAds) + "</span>")}
-         ${row("All time", gbp((ads||[]).reduce((t,a)=>t+(+a.cost_gbp||0),0)))}
-       </div>
-       <p class="tiny faint" style="margin:10px 0 0">Read from Google every hour. Do not also add it as an expense or it counts twice.</p>`
-    : '<div class="empty">Not reporting. The Ads Script has not run.</div>';
+  /* ---- where it went, biggest first ---- */
+  const oh   = L.filter(r => r.scope === "overhead" && +r.allocation > 0 && r.recognized);
+  const pre  = L.filter(r => !r.recognized && +r.allocation > 0);
+  const sh   = L.filter(r => +r.allocation === 0);
+  const each = r => line(esc(r.name), gbp(r.allocated_gbp || r.amount_gbp),
+    `<span class="pill">${esc(r.vendor||"—")}</span>
+     ${new Date(r.incurred_on).toLocaleDateString("en-GB",{day:"numeric",month:"short"})}
+     ${r.currency !== "GBP" ? "&middot; "+esc(r.currency)+" "+(+r.amount).toFixed(2) : ""}
+     ${r.verified ? '<span class="pill go">invoice</span>' : '<span class="pill warn">typed</span>'}`);
 
-  el("catCard").innerHTML = (byCat||[]).length
-    ? `<div class="ledger">${byCat.map(c=>row(esc(c.name), gbp(c.spent_gbp))).join("")}</div>`
-    : '<div class="empty">Nothing logged this month.</div>';
+  const blocks = [];
+  if(camps && camps.length)
+    blocks.push([ads, group("ads", ads,
+      camps.map(c => line(esc(c.campaign), gbp(c.cost_gbp),
+        `<span class="pill ${c.status==="ENABLED"?"go":""}">${esc((c.status||"").toLowerCase()||"unknown")}</span>
+         ${(+c.clicks).toLocaleString("en-GB")} clicks &middot; ${gbp(c.cpc_gbp)} each`)).join(""),
+      `${camps.length} campaign${camps.length>1?"s":""}`,
+      "Read from Google every hour and never entered by hand, so it cannot drift and cannot be counted twice.")]);
+  if(pre.length)
+    blocks.push([prep, group("prepaid", prep, pre.map(each).join(""), `${pre.length} top-ups`,
+      "Funded, not proven consumed. It is cash out today and an expense on the day it is used, so it is kept out of the profit figure above.")]);
+  if(oh.length)
+    blocks.push([rec, group("overhead", rec, oh.map(each).join(""), `${oh.length} items`,
+      "The cost of existing: models, the platform, the domain, the importer.")]);
+  if(ord){
+    /* Read from order_pnl, which reads it from supplier_orders and from the
+       fees Shopify actually charged. Never retyped here, or a correction on the
+       Orders tab would leave this one showing the old number. */
+    const ords = (STATE.orders||[]).filter(o => !o.is_test);
+    const body = ords.length
+      ? ords.map(o => line(esc(o.name) + " &middot; " + esc(o.customer_name||""),
+          gbp((+o.cogs_gbp||0) + (+o.fees_gbp||0)),
+          `goods ${gbp(o.cogs_gbp)} &middot; fees ${gbp(o.fees_gbp)} ${cogsPill(o.cogs_source)}`)).join("")
+      : line("Goods and fees", gbp(ord), "");
+    blocks.push([ord, group("order", ord, body, `${ords.length||1} order${ords.length===1?"":"s"}`,
+      "Scales with sales rather than with time, so it is not part of the monthly run rate. The same figure sits inside each order's own profit; it is counted once.")]);
+  }
+  if(sh.length)
+    blocks.push([share, group("shared", share, sh.map(each).join(""), "not in the total above",
+      "Real money that left, charged to nothing until you set a share. Every figure above excludes these, which is why the headings do not add up to what has actually gone."), true]);
 
-  el("entriesCard").innerHTML = (entries||[]).length
-    ? `<div class="ledger">${entries.map(e=>
-        `<div><span class="k">${esc(e.name)} <span class="faint" style="font-size:11px">${esc(byId[e.category_id]||"")} &middot; ${new Date(e.incurred_on).toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</span></span>
-         <span>${gbp(e.amount_gbp)}</span></div>`).join("")}</div>`
-    : '<div class="empty">No expenses yet. Add the ones you already pay: Shopify, the domain, Supabase.</div>';
+  /* Largest first, and only the largest opens. The shared block is pushed to
+     the bottom whatever its size: it is not part of the total above it, and a
+     reader who adds the group headings has to land on the same number. */
+  blocks.sort((a,b) => (a[2]?1:0) - (b[2]?1:0) || b[0] - a[0]);
+  el("costGroups").innerHTML = blocks.map((b,i) =>
+      b[1].replace('<details class="grp">', i===0 ? '<details class="grp" open>' : '<details class="grp">')
+    ).join("") || '<div class="card"><div class="empty">Nothing logged yet.</div></div>';
+  el("costGroupsN").innerHTML = gbp0(total) + " charged" +
+    (share ? ` <span class="faint">plus ${gbp0(share)} shared</span>` : "");
 
+  /* ---- the run rate. A rate, never added to the cash above. ---- */
+  const runShared = (recur||[]).filter(r => +r.allocation === 0);
+  el("runN").textContent = gbp(s.run_rate_monthly_gbp) + " a month";
   el("recurCard").innerHTML = (recur||[]).length
-    ? `<div class="ledger">${recur.map(r=>
-        `<div><span class="k">${esc(r.name)} <span class="faint" style="font-size:11px">${esc(r.frequency)}</span></span><span>${gbp(r.amount_gbp)} <span class="faint" style="font-size:11px">${eur(r.amount_gbp)}</span></span></div>`).join("")}</div>`
+    ? `<div class="ledger">${(recur||[]).map(r => {
+        const m = +r.monthly_gbp || 0;
+        return `<div><span class="k">${esc(r.name)}
+          <span class="faint" style="font-size:11px">${esc(r.frequency)}${(+r.allocation===0)?" &middot; shared, not charged":""}</span></span>
+          <span class="${m?"":"faint"}">${m ? gbp(m) : gbp(r.amount_gbp)+" ✕"}</span></div>`;
+      }).join("")}
+      <div class="tot"><span class="k">Every month</span><span>${gbp(s.run_rate_monthly_gbp)}</span></div></div>
+      <p class="tiny faint" style="margin:10px 0 0">Normalised to a month, so the domain reads
+      ${gbp(0.65)} rather than its yearly ${gbp(7.79)}. A yearly figure is ${gbp((+s.run_rate_monthly_gbp||0)*12)}.
+      ${runShared.length?`The ✕ rows are shared with Elais and count nothing until you set a share.`:""}</p>`
     : '<div class="empty">No recurring costs. Without these the daily burn reads zero, which is not true.</div>';
+
+  /* ---- what the audit changed, and what it left alone ---- */
+  const corr = audit.corrections || [];
+  el("auditCard").innerHTML = corr.length
+    ? `<div class="ledger" style="font-family:var(--f)">${corr.map(c=>`
+        <div style="display:block;padding:9px 0">
+          <div class="rowsplit"><strong style="font-size:13.5px">${esc(c.item)}</strong>
+            <span class="mono" style="font-size:12px">${esc(c.now)}</span></div>
+          <div class="tiny faint" style="margin-top:2px">
+            <s style="white-space:nowrap">${esc(c.was)}</s> &middot; ${esc(c.why)}</div>
+        </div>`).join("")}</div>
+      <p class="tiny faint" style="margin:9px 0 0">${esc(audit.source||"")}${audit.as_of?", read on "+new Date(audit.as_of).toLocaleDateString("en-GB",{day:"numeric",month:"long"}):""}.</p>`
+    : '<div class="empty">No audit on record.</div>';
+
+  const exc = audit.excluded || [];
+  el("excludedCard").innerHTML = exc.length
+    ? `<div class="ledger" style="font-family:var(--f)">${exc.map(e=>`
+        <div style="display:block;padding:8px 0">
+          <strong style="font-size:13.5px">${esc(e.item)}</strong>
+          <div class="tiny faint" style="margin-top:2px">${esc(e.why)}</div></div>`).join("")}</div>`
+    : '<div class="empty">&mdash;</div>';
+
+  el("costStamp").textContent = audit.as_of
+    ? "verified " + new Date(audit.as_of).toLocaleDateString("en-GB",{day:"numeric",month:"short"})
+    : "unverified";
 }
+
 el("addExpBtn").addEventListener("click", () => {
   const f = el("expForm"); f.hidden = !f.hidden;
   if(!f.hidden){ el("eDate").value = new Date().toISOString().slice(0,10); el("eName").focus(); }
@@ -927,9 +1162,12 @@ el("expForm").addEventListener("submit", async e => {
   e.preventDefault();
   const cur = el("eCur").value, freq = el("eFreq").value;
   const rate = cur==="EUR"?EURGBP : cur==="USD"?0.79 : 1;
+  /* verified stays false. The audit set it on rows an invoice backs by name;
+     anything typed straight in is a memory until one does. */
   const body = {
     name: el("eName").value.trim(), category_id: +el("eCat").value,
     amount: parseFloat(el("eAmt").value), currency: cur, fx_rate: rate,
+    allocation: parseFloat(el("eAlloc").value), verified: false,
   };
   try{
     if(freq === "once"){
@@ -1099,39 +1337,218 @@ el("pSearch").addEventListener("input", e => {
   pTimer = setTimeout(applyFilter, 160);
 });
 
+/* --------------------------------------------------------------------- ads
+   Laid out like Google's own campaign table, in the same column order, so the
+   two can be read against each other without translating anything. What it
+   adds is the arithmetic Google will never do for this business:
+
+     BREAK-EVEN CONVERSION RATE. Cost per click divided by the mean
+     contribution of the 412 products inside the listing group. It moves every
+     time the cost per click moves, which is daily, so it is computed in the
+     database from live numbers rather than written down. It has already gone
+     0.58% -> 0.85% -> 1.15% inside four days, and a figure typed into a page
+     would have been wrong within a day of being typed.
+
+     THE READ POINT. Roughly three expected conversions' worth of clicks. Below
+     it, zero conversions is consistent with a perfectly good campaign and
+     switching anything off on the strength of it is guessing.
+
+   Campaigns are separated because they are not comparable: one is a paused
+   Performance Max campaign and one is live Standard Shopping, they buy
+   different inventory, and blending them hides that the newer one buys clicks
+   a third cheaper. */
+
+const CHAN = { PERFORMANCE_MAX:"Performance Max", SHOPPING:"Shopping",
+               SEARCH:"Search", DISPLAY:"Display", VIDEO:"Video" };
+const BID  = { TARGET_SPEND:"Maximize clicks", MAXIMIZE_CONVERSIONS:"Maximize conversions",
+               MAXIMIZE_CONVERSION_VALUE:"Max conversion value",
+               TARGET_ROAS:"Target ROAS", TARGET_CPA:"Target CPA", MANUAL_CPC:"Manual CPC" };
+const nice = (map, v) => map[v] || (v||"").replace(/_/g," ").toLowerCase() || "—";
+const n0   = n => (n==null||isNaN(n)) ? "—" : Math.round(+n).toLocaleString("en-GB");
+
 async function loadAds(){
-  const rows = await get("ad_days?select=*&order=day.desc&limit=30").catch(()=>[]);
+  const [rows, camps, setting] = await Promise.all([
+    get("ad_days?select=*&order=day.asc").catch(()=>[]),
+    get("ad_campaigns?select=*&order=last_day.desc,cost_gbp.desc").catch(()=>[]),
+    get("store_settings?select=value&key=eq.ad_campaigns").catch(()=>[]),
+  ]);
+  const cfg = ((setting||[])[0]||{}).value || {};
+
   if(!rows || !rows.length){
-    el("adsCard").innerHTML = `<div class="empty" style="text-align:left">
+    el("adsHead").innerHTML = `<div class="card"><div class="empty" style="text-align:left">
       <strong style="color:var(--ink)">Not reporting.</strong><br>
       The Google Ads Script has not posted yet. Numbers stay blank rather than stale:
-      a dashboard that shows an old figure as a current one is worse than one that shows nothing.</div>`;
+      a dashboard that shows an old figure as a current one is worse than one that shows nothing.</div></div>`;
+    el("adsChart").innerHTML = el("adsTable").innerHTML = el("adsDetail").innerHTML = "";
     return;
   }
-  const spend = rows.reduce((a,r)=>a+(+r.cost_gbp||0),0);
-  const clicks = rows.reduce((a,r)=>a+(+r.clicks||0),0);
-  const convs = rows.reduce((a,r)=>a+(+r.conversions||0),0);
-  const fresh = (Date.now()-new Date(rows[0].imported_at))/36e5;
-  /* Same window as the spend above it, not a rolling thirty days. */
-  const campStart = rows[rows.length-1].day;
-  const days = await get("shop_days?select=day,sessions&order=day.asc").catch(()=>[]);
-  const sess = (days||[]).filter(d => d.day >= campStart)
-                         .reduce((a,d) => a + (+d.sessions||0), 0);
-  const real = (STATE.orders||[]).filter(o => !o.is_test
-                 && (o.created_at||"").slice(0,10) >= campStart).length;
-  el("adsCard").innerHTML = `
-    ${fresh>3?'<div class="msg err">Last reported '+Math.round(fresh)+' hours ago. Treat these as stale.</div>':""}
-    <div class="ledger">
-      ${row("Spent since " + new Date(campStart).toLocaleDateString("en-GB",{day:"numeric",month:"short"}), gbp(spend) + ' <span class="faint">' + eur(spend) + "</span>")}
-      ${row("Clicks", clicks.toLocaleString("en-GB"))}
-      ${row("Cost per click", gbp(clicks?spend/clicks:0))}
-      ${row("Conversions Google claims", String(convs))}
-      ${row("Orders you actually got", String((STATE.orders||[]).filter(o=>!o.is_test).length))}
-      ${sess ? row("Visitors who arrived", sess.toLocaleString("en-GB")) : ""}
-      ${sess ? row("Conversion rate", pct(100*real/sess), (real/sess)>=0.0056?"pos":"neg") : ""}
-      ${row("Break-even conversion rate", "0.56%")}
+
+  const sum = k => rows.reduce((a,r)=>a+(+r[k]||0),0);
+  const spend = sum("cost_gbp"), clicks = sum("clicks"), impr = sum("impressions");
+  const convs = sum("conversions"), cvalue = sum("conv_value");
+  const fresh = (Date.now()-new Date(rows[rows.length-1].imported_at))/36e5;
+  const live  = camps.filter(c => c.status === "ENABLED");
+
+  el("adsStamp").textContent = "account 323-939-6319 \u00b7 "
+    + (fresh < 1 ? "read minutes ago" : Math.round(fresh)+"h ago");
+
+  /* ---- the account row, Google's own columns ---- */
+  el("adsHead").innerHTML =
+    (fresh > 3 ? `<div class="msg err">Last reported ${Math.round(fresh)} hours ago. Treat these as stale.</div>` : "") +
+    `<div class="hero">
+      <div class="lbl">Spent since ${new Date(rows[0].day).toLocaleDateString("en-GB",{day:"numeric",month:"long"})}</div>
+      <div class="big">${gbp(spend)}</div>
+      <div class="tiny muted" style="margin-top:4px">${eur(spend)} &middot;
+        ${camps.length} campaign${camps.length>1?"s":""}, ${live.length} running</div>
+      <div class="gt" style="margin-top:14px"><table><thead><tr>
+        <th style="text-align:right">Impr.</th><th>Clicks</th><th>CTR</th><th>Avg CPC</th>
+        <th>Cost</th><th>Conv.</th><th>Conv. value</th><th>ROAS</th></tr></thead>
+        <tbody><tr>
+          <td>${n0(impr)}</td><td>${n0(clicks)}</td>
+          <td>${impr?(100*clicks/impr).toFixed(2)+"%":"—"}</td>
+          <td>${gbp(clicks?spend/clicks:0)}</td>
+          <td>${gbp(spend)}</td>
+          <td class="${convs?"":"neg"}">${convs.toFixed(2)}</td>
+          <td>${cvalue?gbp(cvalue*EURGBP):"—"}</td>
+          <td class="${cvalue?"":"neg"}">${cvalue?(cvalue/(spend/EURGBP)).toFixed(2):"0.00"}</td>
+        </tr></tbody></table></div>
+      <p class="tiny faint" style="margin:11px 0 0">Break-even ROAS on this catalogue is 2.58, not 2.
+        Google scores conversion value on the price the shopper pays and a sixth of that is VAT that was never yours.</p>
+    </div>`;
+
+  /* ---- daily spend, stacked by campaign ---- */
+  const days = [...new Set(rows.map(r=>r.day))].sort();
+  const order = camps.map(c=>c.campaign);
+  /* --muted, not --hair: a bar in --hair sits on a --sink track and in dark mode
+     the two are three shades apart, so the paused campaign's five days of spend
+     read as an empty chart. */
+  const hue = c => (camps.find(x=>x.campaign===c)||{}).status === "ENABLED" ? "var(--red)" : "var(--muted)";
+  const byDay = {};
+  rows.forEach(r => { (byDay[r.day] = byDay[r.day] || {})[r.campaign] = +r.cost_gbp||0; });
+  const dayTotal = d => order.reduce((a,c)=>a+((byDay[d]||{})[c]||0), 0);
+  const peak = Math.max(...days.map(dayTotal), 1);
+  el("adsChart").innerHTML = `<div class="card">
+    <div class="rowsplit" style="margin-bottom:2px">
+      <span class="lbl">Spend a day</span>
+      <span class="tiny faint">today is still counting</span></div>
+    <div class="chart">
+      <div class="ch-y"><span>${gbp0(peak)}</span><span>0</span></div>
+      <div class="ch-cols">${days.map(d => `
+        <div class="ch-col" title="${d}: ${gbp(dayTotal(d))}">
+          <div class="ch-stack">${order.filter(c => (byDay[d]||{})[c]).map(c =>
+            `<span style="height:${(100*(byDay[d][c])/peak).toFixed(2)}%;background:${hue(c)}"></span>`).join("")}</div>
+          <em>${new Date(d).toLocaleDateString("en-GB",{day:"numeric"})}</em>
+        </div>`).join("")}</div>
     </div>
-    <p class="tiny faint" style="margin:10px 0 0">The last two are different numbers and are not reconciled. Google cannot claim an order whose visitor never accepted cookies.</p>`;
+    <div class="key" style="margin-top:10px">${camps.map(c =>
+      `<i><span class="dot" style="background:${hue(c.campaign)}"></span>${esc(c.campaign)}
+        <b>${gbp0(c.cost_gbp)}</b></i>`).join("")}</div>
+  </div>`;
+
+  /* ---- the campaign table ---- */
+  el("adsTable").innerHTML = `<div class="card">
+    <div class="lbl" style="margin-bottom:10px">Campaigns</div>
+    <div class="gt"><table>
+      <thead><tr>
+        <th>Campaign</th><th>Budget</th><th>Impr.</th><th>Clicks</th><th>CTR</th>
+        <th>Avg CPC</th><th>Cost</th><th>Conv.</th><th>Break-even CVR</th>
+      </tr></thead>
+      <tbody>${camps.map(c => `
+        <tr class="${c.status==="ENABLED"?"":"off"}">
+          <td class="cname">${esc(c.campaign)}<br>
+            <span class="mono" style="font-size:10.5px;font-weight:400;letter-spacing:.04em">
+              <span class="pill ${c.status==="ENABLED"?"go":""}">${esc((c.status||"unknown").toLowerCase())}</span>
+              ${esc(nice(CHAN,c.channel))} &middot; ${esc(nice(BID,c.bid_strategy))}</span></td>
+          <td>${c.budget?"€"+(+c.budget).toFixed(0)+"/d":"—"}</td>
+          <td>${n0(c.impressions)}</td>
+          <td>${n0(c.clicks)}</td>
+          <td>${c.ctr_pct!=null?(+c.ctr_pct).toFixed(2)+"%":"—"}</td>
+          <td>${gbp(c.cpc_gbp)}</td>
+          <td>${gbp(c.cost_gbp)}</td>
+          <td class="${(+c.conversions)?"":"neg"}">${(+c.conversions).toFixed(2)}</td>
+          <td>${c.breakeven_cvr_pct!=null?(+c.breakeven_cvr_pct).toFixed(2)+"%":"—"}</td>
+        </tr>`).join("")}
+        <tr class="tot">
+          <td class="cname">Account total</td><td>€${camps.filter(c=>c.status==="ENABLED").reduce((a,c)=>a+(+c.budget||0),0).toFixed(0)}/d</td>
+          <td>${n0(impr)}</td><td>${n0(clicks)}</td>
+          <td>${impr?(100*clicks/impr).toFixed(2)+"%":"—"}</td>
+          <td>${gbp(clicks?spend/clicks:0)}</td><td>${gbp(spend)}</td>
+          <td>${convs.toFixed(2)}</td><td>—</td>
+        </tr>
+      </tbody></table></div>
+    <p class="tiny faint" style="margin:11px 0 0">Break-even CVR is this campaign's own cost per click
+      against the ${gbp(73.14)} a sale contributes. It is per campaign because the cost per click is,
+      and it moves whenever delivery does.</p>
+  </div>`;
+
+  /* ---- one card per campaign: the live one first, then the record ---- */
+  el("adsDetail").innerHTML = camps.map(c => {
+    const meta = cfg[c.campaign_id] || {};
+    const dayRows = rows.filter(r => r.campaign === c.campaign);
+    const last = dayRows[dayRows.length-1] || {};
+    const budgetGbp = (+c.budget||0) * EURGBP;
+    const usedToday = (+last.cost_gbp||0);
+    const readPct = c.clicks_to_read ? Math.min(100, 100*(+c.clicks)/(+c.clicks_to_read)) : 0;
+    const on = c.status === "ENABLED";
+
+    return `<div class="card">
+      <div class="rowsplit" style="margin-bottom:3px">
+        <h3 style="font-size:17px">${esc(c.campaign)}</h3>
+        <span class="pill ${on?"go":""}">${esc(meta.label || (on?"running":"stopped"))}</span>
+      </div>
+      <p class="tiny faint" style="margin:0 0 12px">${esc(nice(CHAN,c.channel))} &middot;
+        ${esc(meta.ran || (c.first_day + " to " + c.last_day))} &middot; ${c.days} day${c.days>1?"s":""}</p>
+
+      <div class="ledger">
+        ${row("Spent", gbp(c.cost_gbp) + ' <span class="faint">' + eur(c.cost_gbp) + "</span>")}
+        ${row("Clicks bought", n0(c.clicks) + ' <span class="faint">at ' + gbp(c.cpc_gbp) + " each</span>")}
+        ${row("Break-even conversion rate", (+c.breakeven_cvr_pct).toFixed(2) + "%")}
+        ${row("Conversions Google claims", (+c.conversions).toFixed(2), (+c.conversions)?"":"neg")}
+        ${on && c.budget ? row("Today so far",
+            gbp(usedToday) + ' <span class="faint">of ' + gbp(budgetGbp) + " budget</span>",
+            usedToday >= budgetGbp*0.95 ? "" : "warn") : ""}
+      </div>
+
+      <div style="margin-top:13px">
+        <div class="lbl">Clicks before a zero means anything</div>
+        <div class="prog"><span style="width:${readPct.toFixed(1)}%"></span></div>
+        <p class="tiny ${readPct>=100?"":"faint"}" style="margin:0">
+          ${n0(c.clicks)} of ${n0(c.clicks_to_read)}.
+          ${readPct>=100
+            ? "Past the read point. Zero conversions here is now evidence, not noise."
+            : on
+              ? "Below this, zero conversions is consistent with a campaign that works. Nothing gets switched off on it."
+              : `Stopped ${n0((+c.clicks_to_read)-(+c.clicks))} clicks short of the point where a zero would have meant something, so it never proved anything either way.`}</p>
+      </div>
+
+      ${(meta.config||[]).length ? `<div style="margin-top:14px">
+        <div class="lbl" style="margin-bottom:6px">How it is set up</div>
+        <p class="tiny" style="margin:0">${meta.config.map(x=>esc(x)).join(" &middot; ")}</p></div>` : ""}
+
+      ${meta.why ? `<p class="tiny" style="margin:12px 0 0"><strong>Why this way.</strong> <span class="muted">${esc(meta.why)}</span></p>` : ""}
+      ${meta.why_paused ? `<p class="tiny" style="margin:12px 0 0"><strong>Why it stopped.</strong> <span class="muted">${esc(meta.why_paused)}</span></p>` : ""}
+
+      ${(meta.learned||[]).length ? `<div style="margin-top:12px">
+        <div class="lbl" style="margin-bottom:6px">What it cost us to learn</div>
+        ${meta.learned.map(x=>`<p class="tiny muted" style="margin:0 0 6px">${esc(x)}</p>`).join("")}</div>` : ""}
+      ${(meta.watch||[]).length ? `<div style="margin-top:12px">
+        <div class="lbl" style="margin-bottom:6px">Still open</div>
+        ${meta.watch.map(x=>`<p class="tiny muted" style="margin:0 0 6px">${esc(x)}</p>`).join("")}</div>` : ""}
+
+      <details style="margin-top:13px">
+        <summary class="lbl" style="cursor:pointer">Day by day</summary>
+        <div class="gt" style="margin-top:8px"><table>
+          <thead><tr><th>Day</th><th>Impr.</th><th>Clicks</th><th>CTR</th><th>Avg CPC</th><th>Cost</th><th>Conv.</th></tr></thead>
+          <tbody>${dayRows.slice().reverse().map(d => `<tr>
+            <td class="cname" style="min-width:88px">${new Date(d.day).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"})}</td>
+            <td>${n0(d.impressions)}</td><td>${n0(d.clicks)}</td>
+            <td>${(+d.impressions)?(100*d.clicks/d.impressions).toFixed(2)+"%":"—"}</td>
+            <td>${gbp((+d.clicks)?d.cost_gbp/d.clicks:0)}</td>
+            <td>${gbp(d.cost_gbp)}</td><td>${(+d.conversions).toFixed(2)}</td></tr>`).join("")}
+          </tbody></table></div>
+      </details>
+    </div>`;
+  }).join("");
 }
 
 /* ---------- notes ---------- */

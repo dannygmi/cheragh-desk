@@ -180,8 +180,26 @@ section.view{padding-block:18px 26px}
   .two{grid-template-columns:1fr 1fr}
 
   /* the margins search is a table's worth of cards; give it two columns */
-  #pResults{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+  #pResults{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:10px;align-items:start}
   #pResults .card{margin:0}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+  .chip{font:500 11px/1 var(--mono);letter-spacing:.04em;text-transform:uppercase;
+        padding:7px 10px;border-radius:999px;border:1px solid var(--line);
+        background:var(--sink);color:var(--muted);cursor:pointer;white-space:nowrap}
+  .chip:hover{border-color:var(--muted);color:var(--ink)}
+  .chip[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:#fff}
+  .pcard-h{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
+  .pcard-h img{width:56px;height:56px;object-fit:cover;border-radius:5px;flex:none;background:var(--sink)}
+  .pname{font-weight:600;font-size:14px;line-height:1.25}
+  .pname a{color:inherit;text-decoration:none;border-bottom:1px solid transparent}
+  .pname a:hover{border-bottom-color:var(--brand);color:var(--brand)}
+  .vtable{margin-top:10px;border-top:1px solid var(--line);font:400 12px/1.45 var(--mono)}
+  .vrow{display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:7px 0;
+        border-bottom:1px solid var(--line);align-items:baseline}
+  .vrow:last-child{border-bottom:0}
+  .vrow .vt{color:var(--ink);min-width:0;overflow-wrap:anywhere}
+  .vrow .vs{color:var(--faint);font-size:11px}
+  @media(max-width:520px){ #pResults{grid-template-columns:1fr} }
   #notesList{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
   #notesList .card{margin:0}
   #orderDetail{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
@@ -365,9 +383,11 @@ section.view{padding-block:18px 26px}
 
   <!-- ---------------- PRODUCTS ---------------- -->
   <section class="view wrap" id="v-products" hidden>
-    <div class="vh"><h2>Margins</h2><span class="sub">read only</span></div>
-    <div class="search"><input id="pSearch" type="search" placeholder="Search by name, e.g. copper wall light" autocomplete="off"></div>
-    <div id="pResults"><div class="empty">Type a name. 2,890 offers.</div></div>
+    <div class="vh"><h2>Catalogue</h2><span class="sub" id="pCount">&mdash;</span></div>
+    <div class="search"><input id="pSearch" type="search" placeholder="Search by name, e.g. Gudarz, or drum pendant" autocomplete="off"></div>
+    <div class="chips" id="pChips"></div>
+    <div id="pResults"><div class="empty">Loading the catalogue<span class="spin" style="margin-left:8px"></span></div></div>
+    <div id="pMore"></div>
   </section>
 
   <!-- ---------------- ADS ---------------- -->
@@ -928,43 +948,159 @@ el("expForm").addEventListener("submit", async e => {
 
 /* ---------- products ---------- */
 let pTimer;
-el("pSearch").addEventListener("input", e => {
-  clearTimeout(pTimer);
-  const q = e.target.value.trim();
-  if(q.length < 2){ el("pResults").innerHTML = '<div class="empty">Type a name. 2,890 offers.</div>'; return; }
-  pTimer = setTimeout(() => searchProducts(q), 260);
-});
-async function searchProducts(q){
-  el("pResults").innerHTML = `<div class="empty">Searching<span class="spin" style="margin-left:8px"></span></div>`;
-  /* Split on spaces and join with wildcards, so "copper wall light" matches
-     "Brushed Copper Linear Wall Light". A single *phrase* could never match a
-     hyphenated handle, which is why searching by name used to find nothing. */
-  const t = encodeURIComponent("*" + q.split(/\s+/).filter(Boolean).join("*") + "*");
-  const rows = await get(`variant_economics?select=*&or=(display_name.ilike.${t},title.ilike.${t},sku.ilike.${t},handle.ilike.${t})&limit=25`);
-  el("pResults").innerHTML = rows.length ? rows.map(p => `
-    <div class="card">
-      <div class="pcard">
-        ${p.image?`<img src="${esc(p.image)}" alt="" loading="lazy">`:'<div style="width:58px;height:58px;background:var(--sink);border-radius:5px"></div>'}
-        <div style="min-width:0">
-          <div style="font-weight:600;font-size:14px;line-height:1.3">${esc(p.display_name||"")}</div>
-          <div class="tiny muted" style="margin-top:2px">${esc(p.variant_title||"")}</div>
-          <div class="tiny faint mono" style="margin-top:3px">${esc(p.sku||"")}</div>
-        </div>
-      </div>
-      <dl class="kv">
-        <dt>Price</dt><dd>${gbp(p.price)}</dd>
-        <dt>Landed</dt><dd>${gbp(p.landed_gbp)} <span class="faint">(${gbp(p.goods_gbp)} + ${gbp(p.freight_gbp)} ${esc(p.mode||"")})</span></dd>
-        <dt>Keeps</dt><dd class="${(+p.contribution_gbp)>=0?'pos':'neg'}">${gbp(p.contribution_gbp)} &middot; ${pct(p.margin_pct)}</dd>
-        <dt>By air</dt><dd class="${p.air_safe?'pos':'neg'}">${gbp(p.air_contribution_gbp)} ${p.air_safe?'<span class="pill go">safe</span>':'<span class="pill crit">loses money</span>'}</dd>
-        <dt>Tier</dt><dd>${esc(p.tier||"")} <span class="faint">${esc({"express":"14 to 20 days","made-to-order":"7 to 9 weeks","atelier":"10 to 12 weeks"}[p.tier]||"")}</span></dd>
-        <dt>Market</dt><dd>${gbp(p.band_median)} med &middot; ${gbp(p.band_p90)} p90</dd>
-      </dl>
-      <p class="tiny faint" style="margin:9px 0 0">Cost is the product's, not this exact size. The engine prices one variant per product.</p>
-    </div>`).join("")
-    : '<div class="empty">Nothing matched.</div>';
+/* ------------------------------------------------------------------ catalogue
+   One tab for browsing the catalogue AND reading its margins, which is what
+   Danny asked for: the old version was search-only and returned a flat list of
+   VARIANTS, so a six-colour pendant filled the screen with six near-identical
+   cards and the catalogue was invisible unless you already knew what to type.
+
+   Names come from shop_name, which is the cheragh.display_title metafield and
+   the H1 the live site actually renders. Not products.title, which is a long
+   SEO string, and not the handle. Searching either of those was the original
+   complaint. */
+const PSTATE = { all: [], view: [], shown: 0, q: "", type: "", tier: "", flag: "", open: new Set() };
+const PAGE = 48;
+
+async function loadProducts(){
+  if(PSTATE.all.length) return renderProducts();
+  /* 863 product rows is light enough to hold and filter in the browser;
+     2,890 variant rows is not, so variants are fetched per product on open. */
+  const rows = await get("product_margins?select=*&order=shop_name.asc&limit=2000").catch(()=>[]);
+  PSTATE.all = rows || [];
+  buildChips();
+  applyFilter();
 }
 
-/* ---------- ads ---------- */
+function buildChips(){
+  const types = [...new Set(PSTATE.all.map(p=>p.type).filter(Boolean))].sort();
+  const tiers = [...new Set(PSTATE.all.map(p=>p.tier).filter(Boolean))].sort();
+  const chip = (label, group, value) =>
+    `<button class="chip" data-g="${group}" data-v="${esc(value)}" aria-pressed="false">${esc(label)}</button>`;
+  el("pChips").innerHTML =
+    types.map(t=>chip(t,"type",t)).join("") +
+    tiers.map(t=>chip(t,"tier",t)).join("") +
+    chip("Losing money","flag","losing") +
+    chip("Air safe","flag","air") +
+    chip("In ads","flag","ads");
+  el("pChips").querySelectorAll(".chip").forEach(b => b.addEventListener("click", () => {
+    const g = b.dataset.g, v = b.dataset.v;
+    PSTATE[g] = PSTATE[g] === v ? "" : v;
+    el("pChips").querySelectorAll(`.chip[data-g="${g}"]`).forEach(o =>
+      o.setAttribute("aria-pressed", String(o.dataset.v === PSTATE[g])));
+    applyFilter();
+  }));
+}
+
+function applyFilter(){
+  /* Match every word anywhere in the name, so "drum pendant" finds "Sahar Drum
+     Pendant Light" and the order typed does not matter. */
+  const words = PSTATE.q.toLowerCase().split(/\s+/).filter(Boolean);
+  PSTATE.view = PSTATE.all.filter(p => {
+    const hay = `${p.shop_name||""} ${p.handle||""} ${p.type||""} ${p.seo_title||""}`.toLowerCase();
+    if(!words.every(w => hay.includes(w))) return false;
+    if(PSTATE.type && p.type !== PSTATE.type) return false;
+    if(PSTATE.tier && p.tier !== PSTATE.tier) return false;
+    if(PSTATE.flag === "losing" && !(+p.losing_count > 0)) return false;
+    if(PSTATE.flag === "air"    && !(+p.air_safe_count > 0)) return false;
+    if(PSTATE.flag === "ads"    && !p.in_ads) return false;
+    return true;
+  });
+  PSTATE.shown = 0;
+  renderProducts();
+}
+
+function money2(a, b){ return (+a === +b) ? gbp(a) : `${gbp(a)} to ${gbp(b)}`; }
+
+function productCard(p){
+  const open = PSTATE.open.has(p.product_id);
+  const losing = +p.losing_count > 0;
+  const badges = [
+    p.type ? `<span class="pill">${esc(p.type)}</span>` : "",
+    p.tier ? `<span class="pill">${esc(p.tier)}</span>` : "",
+    losing ? `<span class="pill warn">${p.losing_count} below cost</span>` : "",
+    p.in_ads ? `<span class="pill">in ads</span>` : "",
+  ].join(" ");
+  return `<div class="card" data-pid="${p.product_id}">
+    <div class="pcard-h" data-toggle="${p.product_id}">
+      ${p.image?`<img src="${esc(p.image)}" alt="" loading="lazy">`:'<div style="width:56px;height:56px;background:var(--sink);border-radius:5px;flex:none"></div>'}
+      <div style="min-width:0;flex:1">
+        <div class="pname"><a href="${esc(p.url)}" target="_blank" rel="noopener"
+             title="Open on cheragh.co.uk">${esc(p.shop_name||p.handle||"")}</a></div>
+        <div class="tiny faint" style="margin-top:3px">${p.variants} variant${p.variants==1?"":"s"} &middot; ${esc(p.mode||"")}</div>
+        <div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px">${badges}</div>
+      </div>
+    </div>
+    <dl class="kv" style="margin-top:10px">
+      <dt>Price</dt><dd>${money2(p.price_min, p.price_max)}</dd>
+      <dt>Landed</dt><dd>${money2(p.landed_min, p.landed_max)}</dd>
+      <dt>Keeps</dt><dd class="${(+p.contrib_min)>=0?'pos':'neg'}">${money2(p.contrib_min, p.contrib_max)} &middot; ${pct(p.margin_min)}</dd>
+      <dt>By air</dt><dd>${+p.air_safe_count>0
+        ? `<span class="pos">${p.air_safe_count} of ${p.variants} safe</span>`
+        : '<span class="neg">none safe</span>'}</dd>
+    </dl>
+    <div data-vars="${p.product_id}">${open?'<div class="tiny faint" style="margin-top:8px">Loading variants&hellip;</div>':""}</div>
+  </div>`;
+}
+
+function renderProducts(){
+  const n = PSTATE.view.length;
+  el("pCount").textContent = n === PSTATE.all.length
+    ? `${n.toLocaleString("en-GB")} products, ${PSTATE.all.reduce((a,p)=>a+ +p.variants,0).toLocaleString("en-GB")} variants`
+    : `${n.toLocaleString("en-GB")} of ${PSTATE.all.length.toLocaleString("en-GB")}`;
+  if(!n){
+    el("pResults").innerHTML = '<div class="empty">Nothing matches.</div>';
+    el("pMore").innerHTML = ""; return;
+  }
+  PSTATE.shown = Math.min(Math.max(PSTATE.shown, PAGE), n);
+  el("pResults").innerHTML = PSTATE.view.slice(0, PSTATE.shown).map(productCard).join("");
+  el("pMore").innerHTML = PSTATE.shown < n
+    ? `<button class="btn ghost" id="pMoreBtn" style="width:100%;margin-top:12px">Show ${Math.min(PAGE, n-PSTATE.shown)} more of ${(n-PSTATE.shown).toLocaleString("en-GB")}</button>` : "";
+  const mb = el("pMoreBtn");
+  if(mb) mb.addEventListener("click", () => { PSTATE.shown += PAGE; renderProducts(); });
+  el("pResults").querySelectorAll("[data-toggle]").forEach(h =>
+    h.addEventListener("click", e => {
+      if(e.target.closest("a")) return;          // the name is a link to the site
+      toggleVariants(+h.dataset.toggle);
+    }));
+  PSTATE.open.forEach(pid => { if(el("pResults").querySelector(`[data-vars="${pid}"]`)) showVariants(pid); });
+}
+
+async function toggleVariants(pid){
+  if(PSTATE.open.has(pid)){
+    PSTATE.open.delete(pid);
+    const box = el("pResults").querySelector(`[data-vars="${pid}"]`);
+    if(box) box.innerHTML = "";
+    return;
+  }
+  PSTATE.open.add(pid);
+  showVariants(pid);
+}
+
+async function showVariants(pid){
+  const box = el("pResults").querySelector(`[data-vars="${pid}"]`);
+  if(!box || box.dataset.done === "1") return;
+  box.innerHTML = '<div class="tiny faint" style="margin-top:8px">Loading variants&hellip;</div>';
+  const vs = await get(`variant_economics?select=*&product_id=eq.${pid}&order=price.asc`).catch(()=>[]);
+  if(!vs || !vs.length){ box.innerHTML = '<div class="tiny faint" style="margin-top:8px">No variants.</div>'; return; }
+  box.dataset.done = "1";
+  box.innerHTML = `<div class="vtable">${vs.map(v => `
+    <div class="vrow">
+      <span class="vt">${esc(v.variant_title && v.variant_title !== "Default Title" ? v.variant_title : "Single option")}
+        <span class="vs">${esc(v.sku||"")}</span></span>
+      <span>${gbp(v.price)}</span>
+      <span class="${(+v.contribution_gbp)>=0?'pos':'neg'}">${gbp(v.contribution_gbp)}
+        <span class="vs">${v.air_safe?"air ok":"sea only"}</span></span>
+    </div>`).join("")}</div>
+    <div class="tiny faint" style="margin-top:8px">Cost is the product's, not each size. The engine prices one variant per product.</div>`;
+}
+
+let pTimer;
+el("pSearch").addEventListener("input", e => {
+  clearTimeout(pTimer);
+  PSTATE.q = e.target.value.trim();
+  pTimer = setTimeout(applyFilter, 160);
+});
+
 async function loadAds(){
   const rows = await get("ad_days?select=*&order=day.desc&limit=30").catch(()=>[]);
   if(!rows || !rows.length){
@@ -1025,7 +1161,7 @@ async function boot(){
   el("stamp").innerHTML = '<span class="spin"></span>';
   try{
     await loadToday();
-    await Promise.all([loadOrders(), loadCosts(), loadAds(), loadNotes()]);
+    await Promise.all([loadOrders(), loadCosts(), loadAds(), loadNotes(), loadProducts()]);
     el("stamp").textContent = new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
     el("todayStamp").textContent = new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
   }catch(err){

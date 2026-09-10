@@ -650,7 +650,12 @@ function bindRows(scope){
 }
 
 async function loadOrders(){
-  const orders = STATE.orders || await get("order_pnl?select=*&order=created_at.desc");
+  /* Always the full list, never STATE.orders. The Today tiles are built from
+     an is_test=false query, so reusing that set here made "your own" count
+     permanently zero and the "yours" pill impossible to render: the screen
+     said "1 real, 0 your own" while four of your own orders sat in the table
+     it had just filtered away. This is the one place they should be visible. */
+  const orders = await get("order_pnl?select=*&order=created_at.desc");
   const real = orders.filter(o=>!o.is_test);
   el("orderCount").textContent = `${real.length} real, ${orders.length-real.length} your own`;
   el("ordersCard").innerHTML = orders.map(o =>

@@ -1,0 +1,975 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#EDECE8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141310" media="(prefers-color-scheme: dark)">
+<title>Cheragh Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+:root{
+  --ground:#EDECE8; --raise:#F7F6F3; --sink:#E4E2DD; --ink:#14120F;
+  --muted:#6F6B64; --faint:#908B83; --rule:#D5D2CB; --hair:#C7C3BA;
+  --red:#EA0001; --red-deep:#B81010; --red-wash:#FBE9E6;
+  --go:#2C6B44; --go-wash:#E4EFE7; --warn:#8A5A15; --warn-wash:#F5EBDC;
+  --f:'Archivo','Helvetica Neue',Arial,sans-serif;
+  --m:'JetBrains Mono','SF Mono',Menlo,monospace;
+  --bar:64px;
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#141310; --raise:#1D1B17; --sink:#0E0D0B; --ink:#EDECE8;
+  --muted:#A19C93; --faint:#847F76; --rule:#2E2B25; --hair:#3A362F;
+  --red:#FF3B33; --red-deep:#FF6259; --red-wash:#2B1512;
+  --go:#7FC79A; --go-wash:#16241C; --warn:#D9A05B; --warn-wash:#2A2015;
+}}
+:root[data-theme="dark"]{
+  --ground:#141310; --raise:#1D1B17; --sink:#0E0D0B; --ink:#EDECE8;
+  --muted:#A19C93; --faint:#847F76; --rule:#2E2B25; --hair:#3A362F;
+  --red:#FF3B33; --red-deep:#FF6259; --red-wash:#2B1512;
+  --go:#7FC79A; --go-wash:#16241C; --warn:#D9A05B; --warn-wash:#2A2015;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0}
+body{
+  background:var(--ground); color:var(--ink); font-family:var(--f);
+  font-size:15px; line-height:1.45; -webkit-font-smoothing:antialiased;
+  padding-bottom:calc(var(--bar) + env(safe-area-inset-bottom,0px));
+}
+.wrap{max-width:940px;margin:0 auto;padding-inline:16px}
+h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.015em;text-wrap:balance}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--red)}
+:focus-visible{outline:2px solid var(--red);outline-offset:2px;border-radius:3px}
+.mono{font-family:var(--m);font-variant-numeric:tabular-nums}
+[hidden]{display:none!important}
+
+/* ---- top ---- */
+header.top{
+  position:sticky;top:0;z-index:20;background:var(--ground);
+  border-bottom:1px solid var(--rule);
+  padding-block:12px 10px;
+}
+.top .wrap{display:flex;align-items:center;gap:12px}
+.brand{font-size:15px;font-weight:700;letter-spacing:-.02em;margin-right:auto}
+.brand em{font-style:normal;color:var(--red)}
+.stamp{font-family:var(--m);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.iconbtn{
+  background:none;border:1px solid var(--hair);border-radius:5px;
+  width:34px;height:34px;display:grid;place-items:center;cursor:pointer;
+  font-size:14px;color:var(--muted);flex:none;
+}
+.iconbtn:active{background:var(--sink)}
+
+/* ---- bottom nav ---- */
+nav.tabs{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;
+  background:var(--raise);border-top:1px solid var(--hair);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+nav.tabs .wrap{display:flex;gap:0;padding-inline:4px}
+nav.tabs button{
+  flex:1;background:none;border:0;cursor:pointer;padding:9px 2px 10px;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-family:var(--m);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--faint);border-top:2px solid transparent;margin-top:-1px;min-height:var(--bar);
+  justify-content:center;
+}
+nav.tabs button .g{font-size:17px;line-height:1;font-family:var(--f);font-weight:600;letter-spacing:0}
+nav.tabs button[aria-current="page"]{color:var(--red);border-top-color:var(--red)}
+
+/* ---- generic ---- */
+section.view{padding-block:18px 26px}
+.vh{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.vh h2{font-size:23px}
+.vh .sub{font-family:var(--m);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.card{background:var(--raise);border:1px solid var(--hair);border-radius:7px;padding:14px 15px;margin-bottom:10px}
+.card.tight{padding:11px 13px}
+.rowsplit{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.lbl{font-family:var(--m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.big{font-size:30px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.05}
+.big.sm{font-size:22px}
+.pos{color:var(--go)} .neg{color:var(--red)}
+.muted{color:var(--muted)} .faint{color:var(--faint)}
+.tiny{font-size:12.5px;line-height:1.4}
+.stack{display:grid;gap:10px}
+.two{display:grid;gap:10px;grid-template-columns:1fr 1fr}
+@media(max-width:430px){.two{grid-template-columns:1fr}}
+.pill{
+  display:inline-flex;align-items:center;gap:5px;font-family:var(--m);
+  font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 7px;border-radius:3px;background:var(--sink);color:var(--muted);white-space:nowrap;
+}
+.pill.go{background:var(--go-wash);color:var(--go)}
+.pill.warn{background:var(--warn-wash);color:var(--warn)}
+.pill.crit{background:var(--red-wash);color:var(--red-deep)}
+.btn{
+  background:var(--red);color:#fff;border:0;border-radius:6px;
+  padding:12px 16px;font-weight:600;font-size:15px;cursor:pointer;min-height:44px;
+}
+.btn:active{background:var(--red-deep)}
+.btn.ghost{background:none;color:var(--ink);border:1px solid var(--hair)}
+.btn.ghost:active{background:var(--sink)}
+.btn.sm{padding:8px 12px;font-size:13.5px;min-height:38px}
+.btn:disabled{opacity:.45;cursor:default}
+.field{display:block;margin-bottom:11px}
+.field span{display:block;font-family:var(--m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.field input,.field select,.field textarea{
+  width:100%;background:var(--ground);border:1px solid var(--hair);border-radius:6px;
+  padding:11px 12px;min-height:44px;font-size:16px;
+}
+.field textarea{min-height:76px;resize:vertical;font-size:15px}
+.inline{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.msg{padding:10px 12px;border-radius:6px;font-size:13.5px;margin-bottom:12px}
+.msg.err{background:var(--red-wash);color:var(--red-deep)}
+.msg.ok{background:var(--go-wash);color:var(--go)}
+.empty{text-align:center;padding:34px 16px;color:var(--faint);font-size:14px}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid var(--hair);border-top-color:var(--red);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.spin{animation:none}}
+
+/* ---- stats strip ---- */
+.stats{display:grid;gap:10px;grid-template-columns:repeat(2,1fr);margin-bottom:10px}
+.stats .card{margin:0}
+.cols{display:grid;gap:10px}
+.colhead{display:flex;align-items:baseline;gap:10px;margin:20px 0 10px}
+.colhead h3{font-size:17px}
+.colhead .n{font-family:var(--m);font-size:10.5px;letter-spacing:.08em;color:var(--faint);text-transform:uppercase}
+
+/* ============ DESKTOP: side rail, real columns ============ */
+@media(min-width:900px){
+  body{padding-bottom:0;padding-left:206px}
+  .wrap{max-width:1120px;padding-inline:26px}
+
+  nav.tabs{
+    top:0;right:auto;bottom:0;width:206px;
+    border-top:0;border-right:1px solid var(--hair);
+    background:var(--sink);display:flex;flex-direction:column;padding-bottom:0;
+  }
+  nav.tabs::before{
+    content:"Cheragh Desk";display:block;
+    font-family:var(--f);font-weight:700;font-size:15px;letter-spacing:-.02em;
+    padding:19px 20px 16px;color:var(--ink);border-bottom:1px solid var(--hair);
+  }
+  nav.tabs .wrap{
+    flex-direction:column;max-width:none;padding:10px 10px 0;gap:1px;display:flex;
+  }
+  nav.tabs button{
+    flex:none;flex-direction:row;justify-content:flex-start;gap:11px;
+    min-height:40px;padding:9px 12px;border-top:0;margin-top:0;border-radius:6px;
+    font-size:12.5px;letter-spacing:.05em;text-align:left;
+  }
+  nav.tabs button .g{font-size:14px;width:16px;text-align:center}
+  nav.tabs button:hover{background:var(--ground);color:var(--ink)}
+  nav.tabs button[aria-current="page"]{background:var(--ground);color:var(--red)}
+
+  header.top{padding-block:16px 14px}
+  .top .brand{display:none}
+  .top .wrap{justify-content:flex-end}
+  .top .stamp{margin-right:auto}
+
+  section.view{padding-block:22px 40px}
+  .vh h2{font-size:27px}
+
+  .stats{grid-template-columns:repeat(4,1fr);gap:12px}
+  .cols{grid-template-columns:1.25fr 1fr;gap:26px;align-items:start}
+  .colhead{margin-top:0}
+  .two{grid-template-columns:1fr 1fr}
+
+  /* the margins search is a table's worth of cards; give it two columns */
+  #pResults{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+  #pResults .card{margin:0}
+  #notesList{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+  #notesList .card{margin:0}
+  #orderDetail{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+  #orderDetail .back,#orderDetail .sheet-h{grid-column:1/-1}
+  #orderDetail .card{margin:0}
+}
+@media(min-width:1280px){ .wrap{max-width:1240px} }
+
+/* ---- worklist rows ---- */
+.wrow{
+  display:grid;grid-template-columns:1fr auto;gap:4px 12px;
+  padding:12px 0;border-bottom:1px solid var(--rule);cursor:pointer;
+}
+.wrow:last-child{border-bottom:0}
+.wrow .t{font-weight:600;font-size:14.5px;line-height:1.3}
+.wrow .s{font-size:12.5px;color:var(--muted);grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.wrow .amt{font-family:var(--m);font-weight:700;font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.age{font-family:var(--m);font-size:11px;font-weight:700}
+.age.hot{color:var(--red)}
+
+/* ---- ledger ---- */
+.ledger{font-family:var(--m);font-size:13px;font-variant-numeric:tabular-nums}
+.ledger div{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dotted var(--rule)}
+.ledger div:last-child{border-bottom:0}
+.ledger .k{color:var(--muted);font-family:var(--f);font-size:13.5px}
+.ledger .tot{border-top:1px solid var(--ink);border-bottom:0!important;margin-top:5px;padding-top:9px;font-weight:700;font-size:16px}
+.ledger .tot .k{font-family:var(--f);font-weight:700;font-size:15px}
+
+/* ---- search ---- */
+.search{position:relative;margin-bottom:12px}
+.search input{width:100%;background:var(--raise);border:1px solid var(--hair);border-radius:7px;padding:12px 14px;min-height:46px;font-size:16px}
+.pcard{display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:start}
+.pcard img{width:58px;height:58px;object-fit:cover;border-radius:5px;background:var(--sink);max-width:100%}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:13px;margin-top:8px}
+.kv dt{color:var(--faint);font-family:var(--m);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
+.kv dd{margin:0;font-family:var(--m);font-variant-numeric:tabular-nums;font-weight:500}
+
+/* ---- login ---- */
+.gate{min-height:78vh;display:grid;place-items:center;padding:24px 0}
+.gate .box{width:100%;max-width:340px}
+.gate h1{font-size:31px;margin-bottom:6px}
+.gate p{color:var(--muted);font-size:14px;margin:0 0 20px}
+
+/* ---- back ---- */
+.back{background:none;border:0;color:var(--red);font-family:var(--m);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 0;cursor:pointer;margin-bottom:6px}
+.sheet-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+</style>
+</head>
+<body>
+
+<!-- ============================ LOGIN ============================ -->
+<div id="gate" class="wrap gate">
+  <form class="box" id="loginForm">
+    <h1>Cheragh <em style="color:var(--red);font-style:normal">Desk</em></h1>
+    <p>One page for orders, costs and margins.</p>
+    <div id="loginMsg"></div>
+    <label class="field"><span>Email</span>
+      <input id="email" type="email" autocomplete="username" required></label>
+    <label class="field"><span>Password</span>
+      <input id="password" type="password" autocomplete="current-password" required></label>
+    <button class="btn" style="width:100%" id="loginBtn" type="submit">Sign in</button>
+  </form>
+</div>
+
+<!-- ============================ APP ============================ -->
+<div id="app" hidden>
+
+<header class="top">
+  <div class="wrap">
+    <span class="brand">Cheragh <em>Desk</em></span>
+    <span class="stamp" id="stamp"></span>
+    <button class="iconbtn" id="themeBtn" title="Theme" aria-label="Switch theme">◐</button>
+    <button class="iconbtn" id="refreshBtn" title="Refresh" aria-label="Refresh">↻</button>
+  </div>
+</header>
+
+<main>
+  <!-- ---------------- TODAY ---------------- -->
+  <section class="view wrap" id="v-today">
+    <div class="vh"><h2>Today</h2><span class="sub" id="todayStamp"></span></div>
+
+    <div class="stats">
+      <div class="card">
+        <div class="lbl">Profit, real orders</div>
+        <div class="big" id="kProfit">&mdash;</div>
+        <div class="tiny faint" id="kProfitNote">before ads and overheads</div>
+      </div>
+      <div class="card">
+        <div class="lbl">Spent this month</div>
+        <div class="big" id="kSpent">&mdash;</div>
+        <div class="tiny faint" id="kBurn">&mdash;</div>
+      </div>
+      <div class="card">
+        <div class="lbl">Real orders</div>
+        <div class="big" id="kOrders">&mdash;</div>
+        <div class="tiny faint" id="kOrdersNote">&mdash;</div>
+      </div>
+      <div class="card">
+        <div class="lbl">Since the last one</div>
+        <div class="big" id="kDays">&mdash;</div>
+        <div class="tiny faint" id="kDaysNote">&mdash;</div>
+      </div>
+    </div>
+
+    <div class="cols">
+      <div>
+        <div class="colhead"><h3>Needs a supplier order</h3><span class="n" id="queueN"></span></div>
+        <div class="card" id="queueCard"><div class="empty">Loading<span class="spin" style="margin-left:8px"></span></div></div>
+
+        <div class="colhead"><h3>Waiting on a reply</h3><span class="n" id="adviceN"></span></div>
+        <div class="card" id="adviceCard"><div class="empty">&mdash;</div></div>
+      </div>
+
+      <div>
+        <div class="colhead"><h3>Since the campaign started</h3></div>
+        <div class="card" id="cashCard"><div class="ledger" id="campaignLedger"></div></div>
+
+        <div class="colhead"><h3>Is anything stale</h3></div>
+        <div class="card" id="freshCard"><div class="empty">&mdash;</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------------- ORDERS ---------------- -->
+  <section class="view wrap" id="v-orders" hidden>
+    <div id="orderList">
+      <div class="vh"><h2>Orders</h2><span class="sub" id="orderCount"></span></div>
+      <div class="card" id="ordersCard"><div class="empty">Loading<span class="spin" style="margin-left:8px"></span></div></div>
+    </div>
+    <div id="orderDetail" hidden></div>
+  </section>
+
+  <!-- ---------------- COSTS ---------------- -->
+  <section class="view wrap" id="v-costs" hidden>
+    <div class="vh"><h2>Costs</h2></div>
+    <div class="two">
+      <div class="card">
+        <div class="lbl">Spent this month</div>
+        <div class="big sm" id="cSpent">&mdash;</div>
+        <div class="tiny faint">cash that actually left</div>
+      </div>
+      <div class="card">
+        <div class="lbl">Daily burn</div>
+        <div class="big sm" id="cBurn">&mdash;</div>
+        <div class="tiny faint" id="cBurnMo">run rate, not cash</div>
+      </div>
+    </div>
+    <p class="tiny faint" style="margin:-2px 0 14px">These two are never added together. One is money gone, the other is a rate.</p>
+
+    <button class="btn" id="addExpBtn" style="width:100%;margin-bottom:12px">Add an expense</button>
+
+    <form class="card" id="expForm" hidden>
+      <div id="expMsg"></div>
+      <label class="field"><span>What was it</span><input id="eName" required placeholder="Shopify Basic"></label>
+      <div class="inline">
+        <label class="field"><span>Amount</span><input id="eAmt" type="number" step="0.01" inputmode="decimal" required></label>
+        <label class="field"><span>Currency</span><select id="eCur"><option>GBP</option><option>EUR</option><option>USD</option></select></label>
+      </div>
+      <div class="inline">
+        <label class="field"><span>Category</span><select id="eCat"></select></label>
+        <label class="field"><span>How often</span><select id="eFreq">
+          <option value="once">One off</option><option value="monthly" selected>Monthly</option>
+          <option value="annual">Yearly</option><option value="weekly">Weekly</option>
+          <option value="quarterly">Quarterly</option><option value="daily">Daily</option>
+        </select></label>
+      </div>
+      <label class="field"><span>Date</span><input id="eDate" type="date" required></label>
+      <div style="display:flex;gap:8px">
+        <button class="btn" type="submit" style="flex:1" id="eSave">Save</button>
+        <button class="btn ghost" type="button" id="eCancel">Cancel</button>
+      </div>
+      <p class="tiny faint" style="margin:10px 0 0">A recurring one is saved as a run rate and posts itself. A one off is saved as cash on that date.</p>
+    </form>
+
+    <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">This month by category</h2></div>
+    <div class="card" id="catCard"><div class="empty">&mdash;</div></div>
+
+    <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">Recent</h2></div>
+    <div class="card" id="entriesCard"><div class="empty">&mdash;</div></div>
+
+    <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">Recurring</h2></div>
+    <div class="card" id="recurCard"><div class="empty">&mdash;</div></div>
+  </section>
+
+  <!-- ---------------- PRODUCTS ---------------- -->
+  <section class="view wrap" id="v-products" hidden>
+    <div class="vh"><h2>Margins</h2><span class="sub">read only</span></div>
+    <div class="search"><input id="pSearch" type="search" placeholder="Search title, SKU or handle" autocomplete="off"></div>
+    <div id="pResults"><div class="empty">Type to search 2,890 offers.</div></div>
+  </section>
+
+  <!-- ---------------- ADS ---------------- -->
+  <section class="view wrap" id="v-ads" hidden>
+    <div class="vh"><h2>Ads</h2><span class="sub">read only</span></div>
+    <div class="card" id="adsCard"><div class="empty">&mdash;</div></div>
+    <div class="card">
+      <div class="lbl" style="margin-bottom:8px">Standing rules</div>
+      <p class="tiny" style="margin:0 0 8px"><strong>Never press Google's Fix it.</strong> All three of its suggestions on this account would have broken it.</p>
+      <p class="tiny" style="margin:0 0 8px"><strong>No changes until the read point.</strong> Break-even conversion rate is 0.56%, so a zero tells you nothing before roughly 531 clicks.</p>
+      <p class="tiny" style="margin:0"><strong>Google's conversions and your order count will never match.</strong> Order #1005 left no session at all, so Google cannot claim it. Both numbers are shown, neither is reconciled.</p>
+    </div>
+  </section>
+
+  <!-- ---------------- NOTES ---------------- -->
+  <section class="view wrap" id="v-notes" hidden>
+    <div class="vh"><h2>Notes</h2><span class="sub">shared with both models</span></div>
+    <form class="card" id="noteForm">
+      <label class="field"><span>Topic</span><input id="nTopic" required placeholder="VAT position"></label>
+      <label class="field"><span>Note</span><textarea id="nBody" required placeholder="What was decided, and why."></textarea></label>
+      <button class="btn" type="submit" style="width:100%">Save note</button>
+    </form>
+    <div id="notesList"></div>
+  </section>
+</main>
+
+<nav class="tabs">
+  <div class="wrap">
+    <button data-tab="today"    aria-current="page"><span class="g">▣</span>Today</button>
+    <button data-tab="orders"><span class="g">▤</span>Orders</button>
+    <button data-tab="costs"><span class="g">▧</span>Costs</button>
+    <button data-tab="products"><span class="g">◎</span>Margins</button>
+    <button data-tab="ads"><span class="g">◈</span>Ads</button>
+    <button data-tab="notes"><span class="g">✎</span>Notes</button>
+  </div>
+</nav>
+</div>
+
+<script>
+/* ============================================================
+   Cheragh Desk. No framework, no build step, no bundler.
+   Talks to Supabase PostgREST directly with the signed-in
+   user's JWT, so RLS is the whole security model.
+   ============================================================ */
+const SB  = "https://tbmtznnpgibcwibxdvdq.supabase.co";
+const KEY = "sb_publishable_iN0Bm1oZKEhixkmBZNNS-A_lDhRnPmE";
+const EURGBP = 0.866;
+
+let TOK = null, REF = null, CATS = [], STATE = {};
+
+/* ---------- storage that never throws ---------- */
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch { return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch {} },
+  del(k){ try { localStorage.removeItem(k); } catch {} },
+};
+
+/* ---------- format ---------- */
+const gbp = n => (n==null||isNaN(n)) ? "—" :
+  (n<0?"−":"") + "£" + Math.abs(+n).toLocaleString("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2});
+const gbp0 = n => (n==null||isNaN(n)) ? "—" :
+  (n<0?"−":"") + "£" + Math.abs(Math.round(+n)).toLocaleString("en-GB");
+const pct = n => (n==null||isNaN(n)) ? "—" : (+n).toFixed(1)+"%";
+const esc = s => String(s??"").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const el = id => document.getElementById(id);
+
+/* Postgres renders an interval as "00:10:00" under a day and "7 days" over one,
+   sometimes "1 day 12:00:00". Handle all three or a feed reads as never late. */
+function hoursOf(iv){
+  if(!iv) return Infinity;
+  const s = String(iv); let h = 0;
+  const d = s.match(/(\d+)\s+days?/); if(d) h += +d[1] * 24;
+  const t = s.match(/(\d+):(\d\d):(\d\d)/); if(t) h += +t[1] + (+t[2])/60;
+  return h || Infinity;
+}
+
+/* ---------- api ---------- */
+async function auth(email,password){
+  const r = await fetch(`${SB}/auth/v1/token?grant_type=password`,{
+    method:"POST", headers:{apikey:KEY,"Content-Type":"application/json"},
+    body:JSON.stringify({email,password})
+  });
+  const j = await r.json();
+  if(!r.ok) throw new Error(j.error_description || j.msg || j.message || "Sign in failed");
+  return j;
+}
+async function refreshToken(){
+  if(!REF) return false;
+  try{
+    const r = await fetch(`${SB}/auth/v1/token?grant_type=refresh_token`,{
+      method:"POST", headers:{apikey:KEY,"Content-Type":"application/json"},
+      body:JSON.stringify({refresh_token:REF})
+    });
+    if(!r.ok) return false;
+    const j = await r.json();
+    setSession(j); return true;
+  }catch{ return false; }
+}
+function setSession(j){
+  TOK = j.access_token; REF = j.refresh_token;
+  store.set("cg_tok",TOK); store.set("cg_ref",REF);
+}
+function signOut(){
+  TOK=REF=null; store.del("cg_tok"); store.del("cg_ref");
+  el("app").hidden = true; el("gate").hidden = false;
+}
+
+async function api(path, opts={}, retry=true){
+  const r = await fetch(`${SB}/rest/v1/${path}`, {
+    ...opts,
+    headers:{ apikey:KEY, Authorization:`Bearer ${TOK}`,
+      "Content-Type":"application/json", ...(opts.headers||{}) }
+  });
+  if(r.status===401 && retry && await refreshToken()) return api(path,opts,false);
+  if(!r.ok){
+    const t = await r.text();
+    throw new Error(`${r.status} ${t.slice(0,180)}`);
+  }
+  if(r.status===204 || (opts.headers||{}).Prefer==="return=minimal") return null;
+  const t = await r.text();
+  return t ? JSON.parse(t) : null;
+}
+const get   = q => api(q);
+const post  = (t,b) => api(t,{method:"POST",body:JSON.stringify(b),headers:{Prefer:"return=minimal"}});
+const patch = (t,f,b) => api(`${t}?${f}`,{method:"PATCH",body:JSON.stringify(b),headers:{Prefer:"return=minimal"}});
+
+/* ---------- login ---------- */
+el("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const btn = el("loginBtn"); btn.disabled = true; btn.textContent = "Signing in…";
+  el("loginMsg").innerHTML = "";
+  try{
+    setSession(await auth(el("email").value.trim(), el("password").value));
+    el("gate").hidden = true; el("app").hidden = false;
+    await boot();
+  }catch(err){
+    el("loginMsg").innerHTML = `<div class="msg err">${esc(err.message)}</div>`;
+  }finally{ btn.disabled = false; btn.textContent = "Sign in"; }
+});
+
+/* ---------- theme ---------- */
+el("themeBtn").addEventListener("click", () => {
+  const cur = document.documentElement.getAttribute("data-theme");
+  const next = cur === "dark" ? "light" : cur === "light" ? null : "dark";
+  if(next){ document.documentElement.setAttribute("data-theme",next); store.set("cg_theme",next); }
+  else { document.documentElement.removeAttribute("data-theme"); store.del("cg_theme"); }
+});
+(() => { const t = store.get("cg_theme"); if(t) document.documentElement.setAttribute("data-theme",t); })();
+
+/* ---------- tabs ---------- */
+const VIEWS = ["today","orders","costs","products","ads","notes"];
+function show(tab){
+  VIEWS.forEach(v => el("v-"+v).hidden = v !== tab);
+  document.querySelectorAll("nav.tabs button").forEach(b =>
+    b.setAttribute("aria-current", b.dataset.tab===tab ? "page" : "false"));
+  store.set("cg_tab",tab);
+  if(tab==="orders"){ el("orderList").hidden=false; el("orderDetail").hidden=true; }
+  window.scrollTo(0,0);
+}
+document.querySelectorAll("nav.tabs button").forEach(b =>
+  b.addEventListener("click", () => show(b.dataset.tab)));
+el("refreshBtn").addEventListener("click", () => boot());
+
+/* ============================================================
+   RENDERERS
+   ============================================================ */
+
+function cogsPill(src){
+  if(src==="supplier_po") return '<span class="pill go">real cost</span>';
+  if(src==="manual")      return '<span class="pill go">typed</span>';
+  return '<span class="pill warn">estimated</span>';
+}
+
+async function loadToday(){
+  const [orders, spent, burn, advice] = await Promise.all([
+    get("order_pnl?select=*&is_test=eq.false&order=created_at.desc"),
+    get("expense_totals?select=*&limit=2"),
+    get("expense_run_rate?select=*"),
+    get("advice_requests?select=ref,created_at,name,email,room,status&status=eq.new&order=created_at.asc"),
+  ]);
+  STATE.orders = orders;
+
+  const profit = orders.reduce((a,o) => a + (+o.profit_gbp||0), 0);
+  const anyEst = orders.some(o => o.cogs_source === "estimate");
+  el("kProfit").textContent = gbp(profit);
+  el("kProfit").className = "big " + (profit>=0?"pos":"neg");
+  el("kProfitNote").innerHTML = anyEst
+    ? 'before ads and overheads &middot; <span style="color:var(--warn)">some costs still estimated</span>'
+    : "before ads and overheads";
+
+  const thisMonth = (spent||[]).find(s => s.month === new Date().toISOString().slice(0,8)+"01");
+  el("kSpent").textContent = gbp0(thisMonth ? thisMonth.spent_gbp : 0);
+  const b = (burn||[])[0];
+  el("kBurn").textContent = b && b.daily_burn_gbp
+    ? `${gbp(b.daily_burn_gbp)} a day committed` : "no recurring costs entered yet";
+  el("cSpent").textContent = gbp0(thisMonth ? thisMonth.spent_gbp : 0);
+  el("cBurn").textContent  = b && b.daily_burn_gbp ? gbp(b.daily_burn_gbp) : gbp(0);
+  el("cBurnMo").textContent = b && b.monthly_burn_gbp
+    ? `${gbp0(b.monthly_burn_gbp)} a month` : "run rate, not cash";
+
+  // Campaign ledger. Ads spend comes from ad_days when the script is running.
+  const ads = await get("ad_days?select=cost_gbp,clicks,conversions,day&order=day.desc").catch(()=>[]);
+  const adSpend = (ads||[]).reduce((a,d)=>a+(+d.cost_gbp||0),0);
+  const clicks  = (ads||[]).reduce((a,d)=>a+(+d.clicks||0),0);
+  const last = orders.length ? orders[0] : null;
+  const daysSince = last ? Math.floor((Date.now()-new Date(last.created_at))/864e5) : null;
+  el("campaignLedger").innerHTML = [
+    row("Gross profit, real orders", gbp(profit), profit>=0?"pos":"neg"),
+    (ads&&ads.length)
+      ? row("Advertising spent", gbp(adSpend), "neg")
+      : `<div><span class="k">Advertising spent</span><span class="faint">not reporting yet</span></div>`,
+    (ads&&ads.length) ? row("Clicks", clicks.toLocaleString("en-GB")) : "",
+    row("Days since the last order", daysSince==null?"—":String(daysSince)),
+    (ads&&ads.length) ? `<div class="tot"><span class="k">Net</span><span class="${profit-adSpend>=0?'pos':'neg'}">${gbp(profit-adSpend)}</span></div>` : "",
+  ].join("");
+
+  el("kOrders").textContent = String(orders.length);
+  el("kOrdersNote").textContent = orders.length
+    ? `${gbp0(orders.reduce((a,o)=>a+(+o.total_gbp||0),0))} taken` : "none yet";
+  el("kDays").textContent = daysSince==null ? "—" : (daysSince===0 ? "today" : daysSince+"d");
+  el("kDaysNote").textContent = last ? `${last.name}, ${esc(last.customer_name||"")}` : "no orders yet";
+
+  // Worklist: paid, not test, no supplier order yet.
+  const q = orders.filter(o =>
+    (o.financial_status||"").toUpperCase()==="PAID" &&
+    (o.fulfil_state||"new") !== "shipped" &&
+    !o.supplier_orders);
+  el("queueN").textContent = q.length ? `${q.length} open` : "clear";
+  el("queueCard").innerHTML = q.length ? q.map(o => wrow(o)).join("")
+    : '<div class="empty">Nothing waiting. Every paid order has a supplier order against it.</div>';
+  bindRows(el("queueCard"));
+
+  // A block whose feed has stopped must say so rather than show an old number.
+  try{
+    const fresh = await get("data_freshness?select=*");
+    el("freshCard").innerHTML = `<div class="ledger">${fresh.map(f=>{
+      const age = f.last_seen ? (Date.now()-new Date(f.last_seen))/36e5 : null;
+      const cap = f.expected ? hoursOf(f.expected) : Infinity;
+      const late = age==null || age>cap;
+      const txt = age==null ? "never" : age<1 ? "just now"
+                : age<48 ? Math.round(age)+"h ago" : Math.round(age/24)+"d ago";
+      return `<div><span class="k">${esc(f.feed)}</span><span class="${late?'neg':'faint'}">${txt}</span></div>`;
+    }).join("")}</div>
+    <p class="tiny faint" style="margin:9px 0 0">Red means the feed is past its expected interval. Numbers drawn from a red feed are old, not current.</p>`;
+  }catch{ el("freshCard").innerHTML = '<div class="empty">&mdash;</div>'; }
+
+  el("adviceN").textContent = (advice||[]).length ? `${advice.length} waiting` : "clear";
+  el("adviceCard").innerHTML = (advice||[]).length
+    ? advice.map(a => {
+        const d = Math.floor((Date.now()-new Date(a.created_at))/864e5);
+        return `<div class="wrow" style="cursor:default">
+          <span class="t">${esc(a.name||"Someone")} &middot; ${esc(a.room||"no room given")}</span>
+          <span class="age ${d>=1?'hot':''}">${d===0?"today":d+"d"}</span>
+          <span class="s"><a href="mailto:${esc(a.email)}">${esc(a.email)}</a>
+            <span class="pill crit">unanswered</span>
+            <span class="faint mono">${esc(a.ref)}</span></span></div>`;
+      }).join("")
+    : '<div class="empty">Nobody waiting.</div>';
+}
+function row(k,v,cls=""){ return `<div><span class="k">${k}</span><span class="${cls}">${v}</span></div>`; }
+
+function wrow(o){
+  const d = Math.floor((Date.now()-new Date(o.created_at))/864e5);
+  return `<div class="wrow" data-oid="${esc(o.oid)}">
+    <span class="t">${esc(o.name)} &middot; ${esc(o.customer_name||o.email||"")}</span>
+    <span class="amt">${gbp(o.total_gbp)}</span>
+    <span class="s">
+      <span class="age ${d>=2?'hot':''}">${d===0?"today":d+" days"}</span>
+      <span class="pill">${esc(o.fulfil_state||"new")}</span>
+      ${cogsPill(o.cogs_source)}
+      <span class="${(+o.profit_gbp)>=0?'pos':'neg'}" style="font-weight:600">${gbp(o.profit_gbp)}</span>
+    </span></div>`;
+}
+function bindRows(scope){
+  scope.querySelectorAll(".wrow[data-oid]").forEach(r =>
+    r.addEventListener("click", () => openOrder(r.dataset.oid)));
+}
+
+async function loadOrders(){
+  const orders = STATE.orders || await get("order_pnl?select=*&order=created_at.desc");
+  const real = orders.filter(o=>!o.is_test);
+  el("orderCount").textContent = `${real.length} real, ${orders.length-real.length} your own`;
+  el("ordersCard").innerHTML = orders.map(o =>
+    `<div class="wrow" data-oid="${esc(o.oid)}">
+      <span class="t">${esc(o.name)} &middot; ${esc(o.customer_name||o.email||"")} ${o.is_test?'<span class="pill">yours</span>':''}</span>
+      <span class="amt">${gbp(o.total_gbp)}</span>
+      <span class="s">
+        <span class="faint">${new Date(o.created_at).toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</span>
+        <span class="pill">${esc(o.fulfil_state||"new")}</span>
+        ${cogsPill(o.cogs_source)}
+        <span class="${(+o.profit_gbp)>=0?'pos':'neg'}" style="font-weight:600">${gbp(o.profit_gbp)}</span>
+      </span></div>`).join("");
+  bindRows(el("ordersCard"));
+}
+
+async function openOrder(oid){
+  show("orders");
+  el("orderList").hidden = true;
+  const d = el("orderDetail"); d.hidden = false;
+  d.innerHTML = `<div class="empty">Loading<span class="spin" style="margin-left:8px"></span></div>`;
+
+  const f = encodeURIComponent(oid);
+  const [o, items, fees, sup, fin] = await Promise.all([
+    get(`order_pnl?select=*&oid=eq.${f}`),
+    get(`order_items?select=*&oid=eq.${f}`),
+    get(`order_transaction_fees?select=*&oid=eq.${f}`),
+    get(`supplier_orders?select=*&oid=eq.${f}`),
+    get(`order_financials?select=*&oid=eq.${f}`),
+  ]);
+  const O = o[0], F = fin[0] || {};
+  const tier = items[0] ? await get(`variant_economics?select=tier,mode,handle,air_safe,landed_gbp&variant_id=eq.${items[0].variant_num_id}`).catch(()=>[]) : [];
+  const T = (tier||[])[0] || {};
+  const LEAD = {"express":"14 to 20 days","made-to-order":"7 to 9 weeks","atelier":"10 to 12 weeks"};
+
+  d.innerHTML = `
+    <button class="back" id="backBtn">&larr; All orders</button>
+    <div class="sheet-h">
+      <div><h2 style="font-size:24px">${esc(O.name)}</h2>
+        <div class="tiny muted">${esc(O.customer_name||"")} &middot; ${new Date(O.created_at).toLocaleDateString("en-GB",{day:"numeric",month:"long"})}</div></div>
+      <div style="text-align:right">
+        <div class="big sm ${(+O.profit_gbp)>=0?'pos':'neg'}">${gbp(O.profit_gbp)}</div>
+        <div class="tiny faint">${pct(O.margin_pct)} margin</div></div>
+    </div>
+
+    <div class="card">
+      <div class="lbl" style="margin-bottom:9px">Where the money went ${cogsPill(O.cogs_source)}</div>
+      <div class="ledger">
+        ${row("Customer paid", gbp(F.total_gbp))}
+        ${+F.discounts_gbp ? row("Discount you gave", "−"+gbp(F.discounts_gbp).replace("£","£")) : ""}
+        ${+F.refunded_gbp ? row("Refunded", "−"+gbp(F.refunded_gbp)) : ""}
+        ${fees.map(x => row(feeName(x), "−"+gbp(x.amount))).join("")}
+        ${+F.cogs_goods_gbp ? row("Goods", "−"+gbp(F.cogs_goods_gbp)) : ""}
+        ${+F.cogs_freight_gbp ? row("Freight", "−"+gbp(F.cogs_freight_gbp)) : ""}
+        ${+F.vat_due_gbp ? row("VAT", "−"+gbp(F.vat_due_gbp)) : ""}
+        <div class="tot"><span class="k">Kept</span><span class="${(+O.profit_gbp)>=0?'pos':'neg'}">${gbp(O.profit_gbp)}</span></div>
+      </div>
+      <p class="tiny faint" style="margin:10px 0 0">Before advertising and before overheads. ${
+        O.cogs_source==="estimate"
+        ? "<strong style='color:var(--warn)'>Goods and freight are the pricing model's guess.</strong> Enter what you actually paid to make this real."
+        : "Goods and freight are what you actually paid."}</p>
+    </div>
+
+    ${items.map(i => `<div class="card tight">
+      <div style="font-weight:600;font-size:14px;line-height:1.35">${esc(i.title)}</div>
+      <div class="s tiny muted" style="margin-top:5px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <span class="mono">${esc(i.sku||"")}</span>
+        <span>&times;${i.quantity}</span>
+        ${T.tier?`<span class="pill">${esc(T.tier)}</span>`:""}
+        ${T.tier?`<span class="faint">${esc(LEAD[T.tier]||"")}</span>`:""}
+        ${T.air_safe===false?'<span class="pill crit">air loses money</span>':T.air_safe?'<span class="pill go">air is safe</span>':""}
+      </div>
+      ${i.supplier_url?`<div style="margin-top:8px"><a href="${esc(i.supplier_url)}" target="_blank" rel="noopener" class="btn ghost sm" style="display:inline-block;text-decoration:none">Open the supplier listing &rarr;</a></div>`:""}
+    </div>`).join("")}
+
+    <div class="card">
+      <div class="lbl" style="margin-bottom:9px">What you paid the factory</div>
+      ${sup.length ? sup.map(s => `<div class="ledger" style="margin-bottom:8px">
+          ${row(`${esc(s.supplier)} &middot; ${esc(s.freight_mode)}`, `${s.currency} ${(+s.total_amount).toFixed(2)}`)}
+          ${row("In pounds", gbp(s.total_gbp))}
+          ${s.placed_on?row("Placed", new Date(s.placed_on).toLocaleDateString("en-GB",{day:"numeric",month:"short"})):""}
+        </div>`).join("")
+        : `<p class="tiny muted" style="margin:0 0 10px">Nothing entered. Profit above is the model's guess until you add it.</p>`}
+      <button class="btn ghost sm" id="addCostBtn" style="width:100%">${sup.length?"Add another payment":"Enter what you paid"}</button>
+      <form id="costForm" hidden style="margin-top:12px">
+        <div id="costMsg"></div>
+        <div class="inline">
+          <label class="field"><span>Total paid</span><input id="sAmt" type="number" step="0.01" inputmode="decimal" required></label>
+          <label class="field"><span>Currency</span><select id="sCur"><option>EUR</option><option>USD</option><option>GBP</option></select></label>
+        </div>
+        <div class="inline">
+          <label class="field"><span>Shipped by</span><select id="sMode"><option value="air">Air</option><option value="sea">Sea</option><option value="express">Express</option></select></label>
+          <label class="field"><span>Reference</span><input id="sRef" placeholder="optional"></label>
+        </div>
+        <button class="btn" type="submit" style="width:100%">Save and recalculate</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="lbl" style="margin-bottom:9px">Fulfilment</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        ${["new","sourced","placed","shipped","delivered","issue"].map(s =>
+          `<button class="btn ${O.fulfil_state===s?"":"ghost"} sm" data-state="${s}">${s}</button>`).join("")}
+      </div>
+      <p class="tiny faint" style="margin:10px 0 0">This is your own tracker. It does not fulfil the order in Shopify, so Shopify will not send the tracking email until you mark it there too.</p>
+    </div>
+
+    <div class="card">
+      <div class="lbl" style="margin-bottom:9px">Replying to ${esc((O.customer_name||"").split(" ")[0]||"them")}</div>
+      <div class="ledger">
+        ${T.tier?row("Published lead time", esc(LEAD[T.tier]||"—")):""}
+        ${row("Change of mind", "30 days from arrival")}
+        ${row("Send goods back within", "14 days of cancelling")}
+        ${row("Refund within", "14 days of goods arriving")}
+        ${row("Delivery charged", gbp(F.shipping_gbp||0))}
+      </div>
+      <p class="tiny faint" style="margin:10px 0 0">The 30 days is our own extension. The two 14s are statutory and must not be shortened.</p>
+      <div style="margin-top:10px"><a class="btn ghost sm" style="display:inline-block;text-decoration:none" href="mailto:${esc(O.email||"")}?subject=${encodeURIComponent("Your Cheragh order "+O.name)}">Email ${esc(O.email||"")}</a></div>
+    </div>`;
+
+  el("backBtn").addEventListener("click", () => { d.hidden=true; el("orderList").hidden=false; window.scrollTo(0,0); });
+  el("addCostBtn").addEventListener("click", () => {
+    const fm = el("costForm"); fm.hidden = !fm.hidden;
+  });
+  el("costForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const cur = el("sCur").value;
+    const rate = cur==="EUR"?EURGBP : cur==="USD"?0.79 : 1;
+    const amt = parseFloat(el("sAmt").value);
+    try{
+      await post("supplier_orders", {
+        oid, supplier:"Zhi Yi", ref: el("sRef").value||"",
+        currency: cur, fx_rate: rate,
+        goods_amount: amt, freight_amount: 0,
+        freight_mode: el("sMode").value, status:"placed",
+        note:"Entered on the desk. Split between goods and freight not broken out.",
+      });
+      const all = await get(`supplier_orders?select=total_gbp&oid=eq.${f}`);
+      const tot = all.reduce((a,s)=>a+(+s.total_gbp||0),0);
+      await patch("order_financials", `oid=eq.${f}`, {
+        cogs_goods_gbp: +tot.toFixed(2), cogs_freight_gbp: 0, cogs_source: "supplier_po",
+      });
+      el("costMsg").innerHTML = `<div class="msg ok">Saved. Profit is now the real number.</div>`;
+      setTimeout(()=>{ STATE.orders=null; openOrder(oid); }, 700);
+    }catch(err){ el("costMsg").innerHTML = `<div class="msg err">${esc(err.message)}</div>`; }
+  });
+  d.querySelectorAll("[data-state]").forEach(b => b.addEventListener("click", async () => {
+    try{
+      await patch("fulfilments", `oid=eq.${f}&line_id=eq.`, {state:b.dataset.state});
+      STATE.orders = null; openOrder(oid);
+    }catch(err){ alert(err.message); }
+  }));
+}
+function feeName(x){
+  const n = (x.rate_name||x.type||"").replace(/_/g," ");
+  const r = x.rate ? ` ${(x.rate*100).toFixed(1)}%` : "";
+  if((x.type||"").includes("foreign")) return "Currency conversion"+r;
+  if((x.type||"").includes("processing")) return "Card processing"+r;
+  return n.charAt(0).toUpperCase()+n.slice(1)+r;
+}
+
+/* ---------- costs ---------- */
+async function loadCosts(){
+  const month = new Date().toISOString().slice(0,8)+"01";
+  const [cats, byCat, entries, recur] = await Promise.all([
+    get("expense_categories?select=*&active=eq.true&order=sort"),
+    get(`expense_by_category?select=*&month=eq.${month}`),
+    get("expense_entries?select=id,name,incurred_on,amount,currency,amount_gbp,source,category_id&order=incurred_on.desc&limit=25"),
+    get("expenses?select=*&active=eq.true&order=amount_gbp.desc"),
+  ]);
+  CATS = cats;
+  el("eCat").innerHTML = cats.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
+  const byId = Object.fromEntries(cats.map(c=>[c.id,c.name]));
+
+  el("catCard").innerHTML = (byCat||[]).length
+    ? `<div class="ledger">${byCat.map(c=>row(esc(c.name), gbp(c.spent_gbp))).join("")}</div>`
+    : '<div class="empty">Nothing logged this month.</div>';
+
+  el("entriesCard").innerHTML = (entries||[]).length
+    ? `<div class="ledger">${entries.map(e=>
+        `<div><span class="k">${esc(e.name)} <span class="faint" style="font-size:11px">${esc(byId[e.category_id]||"")} &middot; ${new Date(e.incurred_on).toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</span></span>
+         <span>${gbp(e.amount_gbp)}</span></div>`).join("")}</div>`
+    : '<div class="empty">No expenses yet. Add the ones you already pay: Shopify, the domain, Supabase.</div>';
+
+  el("recurCard").innerHTML = (recur||[]).length
+    ? `<div class="ledger">${recur.map(r=>
+        `<div><span class="k">${esc(r.name)} <span class="faint" style="font-size:11px">${esc(r.frequency)}</span></span><span>${gbp(r.amount_gbp)}</span></div>`).join("")}</div>`
+    : '<div class="empty">No recurring costs. Without these the daily burn reads zero, which is not true.</div>';
+}
+el("addExpBtn").addEventListener("click", () => {
+  const f = el("expForm"); f.hidden = !f.hidden;
+  if(!f.hidden){ el("eDate").value = new Date().toISOString().slice(0,10); el("eName").focus(); }
+});
+el("eCancel").addEventListener("click", () => { el("expForm").hidden = true; });
+el("expForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const cur = el("eCur").value, freq = el("eFreq").value;
+  const rate = cur==="EUR"?EURGBP : cur==="USD"?0.79 : 1;
+  const body = {
+    name: el("eName").value.trim(), category_id: +el("eCat").value,
+    amount: parseFloat(el("eAmt").value), currency: cur, fx_rate: rate,
+  };
+  try{
+    if(freq === "once"){
+      await post("expense_entries", {...body, incurred_on: el("eDate").value, source:"manual"});
+    } else {
+      await post("expenses", {...body, frequency: freq, starts_on: el("eDate").value});
+      await post("expense_entries", {...body, incurred_on: el("eDate").value, source:"manual",
+        note:"first payment of a recurring cost"});
+    }
+    el("expMsg").innerHTML = `<div class="msg ok">Saved.</div>`;
+    el("expForm").reset(); el("eDate").value = new Date().toISOString().slice(0,10);
+    await loadCosts(); await loadToday();
+    setTimeout(()=>{ el("expMsg").innerHTML=""; el("expForm").hidden=true; }, 900);
+  }catch(err){ el("expMsg").innerHTML = `<div class="msg err">${esc(err.message)}</div>`; }
+});
+
+/* ---------- products ---------- */
+let pTimer;
+el("pSearch").addEventListener("input", e => {
+  clearTimeout(pTimer);
+  const q = e.target.value.trim();
+  if(q.length < 2){ el("pResults").innerHTML = '<div class="empty">Type to search 2,890 offers.</div>'; return; }
+  pTimer = setTimeout(() => searchProducts(q), 260);
+});
+async function searchProducts(q){
+  el("pResults").innerHTML = `<div class="empty">Searching<span class="spin" style="margin-left:8px"></span></div>`;
+  const t = encodeURIComponent(`*${q}*`);
+  const rows = await get(`variant_economics?select=*&or=(title.ilike.${t},sku.ilike.${t},handle.ilike.${t})&limit=25`);
+  el("pResults").innerHTML = rows.length ? rows.map(p => `
+    <div class="card">
+      <div class="pcard">
+        ${p.image?`<img src="${esc(p.image)}" alt="" loading="lazy">`:'<div style="width:58px;height:58px;background:var(--sink);border-radius:5px"></div>'}
+        <div style="min-width:0">
+          <div style="font-weight:600;font-size:14px;line-height:1.3">${esc(p.variant_title||"")}</div>
+          <div class="tiny muted" style="margin-top:2px">${esc((p.title||"").slice(0,90))}</div>
+          <div class="tiny faint mono" style="margin-top:3px">${esc(p.sku||"")}</div>
+        </div>
+      </div>
+      <dl class="kv">
+        <dt>Price</dt><dd>${gbp(p.price)}</dd>
+        <dt>Landed</dt><dd>${gbp(p.landed_gbp)} <span class="faint">(${gbp(p.goods_gbp)} + ${gbp(p.freight_gbp)} ${esc(p.mode||"")})</span></dd>
+        <dt>Keeps</dt><dd class="${(+p.contribution_gbp)>=0?'pos':'neg'}">${gbp(p.contribution_gbp)} &middot; ${pct(p.margin_pct)}</dd>
+        <dt>By air</dt><dd class="${p.air_safe?'pos':'neg'}">${gbp(p.air_contribution_gbp)} ${p.air_safe?'<span class="pill go">safe</span>':'<span class="pill crit">loses money</span>'}</dd>
+        <dt>Tier</dt><dd>${esc(p.tier||"")} <span class="faint">${esc({"express":"14 to 20 days","made-to-order":"7 to 9 weeks","atelier":"10 to 12 weeks"}[p.tier]||"")}</span></dd>
+        <dt>Market</dt><dd>${gbp(p.band_median)} med &middot; ${gbp(p.band_p90)} p90</dd>
+      </dl>
+      <p class="tiny faint" style="margin:9px 0 0">Cost is the product's, not this exact size. The engine prices one variant per product.</p>
+    </div>`).join("")
+    : '<div class="empty">Nothing matched.</div>';
+}
+
+/* ---------- ads ---------- */
+async function loadAds(){
+  const rows = await get("ad_days?select=*&order=day.desc&limit=30").catch(()=>[]);
+  if(!rows || !rows.length){
+    el("adsCard").innerHTML = `<div class="empty" style="text-align:left">
+      <strong style="color:var(--ink)">Not reporting.</strong><br>
+      The Google Ads Script has not posted yet. Numbers stay blank rather than stale:
+      a dashboard that shows an old figure as a current one is worse than one that shows nothing.</div>`;
+    return;
+  }
+  const spend = rows.reduce((a,r)=>a+(+r.cost_gbp||0),0);
+  const clicks = rows.reduce((a,r)=>a+(+r.clicks||0),0);
+  const convs = rows.reduce((a,r)=>a+(+r.conversions||0),0);
+  const fresh = (Date.now()-new Date(rows[0].imported_at))/36e5;
+  el("adsCard").innerHTML = `
+    ${fresh>36?'<div class="msg err">Last reported '+Math.round(fresh)+' hours ago. Treat these as stale.</div>':""}
+    <div class="ledger">
+      ${row("Spent, last 30 days", gbp(spend))}
+      ${row("Clicks", clicks.toLocaleString("en-GB"))}
+      ${row("Cost per click", gbp(clicks?spend/clicks:0))}
+      ${row("Conversions Google claims", String(convs))}
+      ${row("Orders you actually got", String((STATE.orders||[]).filter(o=>!o.is_test).length))}
+      ${row("Break-even conversion rate", "0.56%")}
+    </div>
+    <p class="tiny faint" style="margin:10px 0 0">The last two are different numbers and are not reconciled. Google cannot claim an order whose visitor never accepted cookies.</p>`;
+}
+
+/* ---------- notes ---------- */
+async function loadNotes(){
+  const rows = await get("agent_notes?select=*&order=pinned.desc,created_at.desc&limit=40");
+  el("notesList").innerHTML = rows.length ? rows.map(n => `
+    <div class="card tight">
+      <div class="rowsplit"><strong style="font-size:14.5px">${esc(n.topic)}</strong>
+        <span class="pill">${esc(n.author)}</span></div>
+      <p class="tiny" style="margin:6px 0 0;white-space:pre-wrap">${esc(n.body)}</p>
+      <div class="tiny faint" style="margin-top:6px">${new Date(n.created_at).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}</div>
+    </div>`).join("")
+    : '<div class="empty">Nothing yet. Anything written here is readable by Claude and by ChatGPT.</div>';
+}
+el("noteForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  try{
+    await post("agent_notes", {topic: el("nTopic").value.trim(), body: el("nBody").value.trim(), author:"danny"});
+    el("noteForm").reset(); await loadNotes();
+  }catch(err){ alert(err.message); }
+});
+
+/* ---------- boot ---------- */
+async function boot(){
+  el("stamp").innerHTML = '<span class="spin"></span>';
+  try{
+    await loadToday();
+    await Promise.all([loadOrders(), loadCosts(), loadAds(), loadNotes()]);
+    el("stamp").textContent = new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+    el("todayStamp").textContent = new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
+  }catch(err){
+    el("stamp").textContent = "error";
+    if(String(err.message).startsWith("401")) signOut();
+    else console.error(err);
+  }
+}
+(async function start(){
+  TOK = store.get("cg_tok"); REF = store.get("cg_ref");
+  if(!TOK){ el("gate").hidden = false; return; }
+  el("gate").hidden = true; el("app").hidden = false;
+  const tab = store.get("cg_tab"); if(tab && VIEWS.includes(tab)) show(tab);
+  await boot();
+})();
+</script>
+</body>
+</html>

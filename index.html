@@ -9,326 +9,562 @@
 <title>Cheragh Desk</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap">
 <style>
+/* ============================================================================
+   CHERAGH DESK — visual system, rebuilt 2026-09-10
+
+   The brand is locked (CLAUDE.md §5) so the three colours stay. What changed is
+   everything the brand does not decide, and one thing it does:
+
+   RED MEANT FIVE THINGS AT ONCE. It was the logo, the active tab, every link,
+   every negative number, and every zero. On a desk where the business is
+   currently losing money that painted most of the screen red, and a colour that
+   is everywhere carries no information. Brand red is now INTERACTION ONLY:
+   active nav, links, focus, the primary button, the live campaign. Status has
+   its own scale (good / warn / bad) which is deliberately not the brand red.
+   A negative number is set in ink with a real minus, because on this page a
+   negative is the normal case, not an alarm.
+
+   NOT EVERYTHING IS A CARD. Every block used to be the same 1px border, 7px
+   radius, same fill, so the freshness panel looked exactly as important as the
+   profit. Three surface levels now: the page, a hairline-ruled panel, and one
+   raised card per view for the answer that view exists to give.
+
+   NUMBERS FORM A COLUMN. Figures used to sit at the end of flex rows, so their
+   left edges moved with the length of the label beside them. They are now a
+   right-aligned grid track with tabular figures, which is the whole difference
+   between reading a list and scanning one.
+
+   Type is Archivo, not the brand's Antique Olive: AO is licensed and this repo
+   is public, so shipping the woff2 would be a licensing problem, and a
+   near-grotesque with a large x-height is the closest honest substitute.
+   ========================================================================= */
+
 :root{
-  --ground:#EDECE8; --raise:#F7F6F3; --sink:#E4E2DD; --ink:#14120F;
-  --muted:#6F6B64; --faint:#908B83; --rule:#D5D2CB; --hair:#C7C3BA;
-  --red:#EA0001; --red-deep:#B81010; --red-wash:#FBE9E6;
-  --go:#2C6B44; --go-wash:#E4EFE7; --warn:#8A5A15; --warn-wash:#F5EBDC;
+  /* ---- ground ---- */
+  --ground:#EDECE8; --surface:#F6F5F1; --sunk:#E5E3DD; --raise:#FFFFFF;
+  --ink:#14120F; --muted:#56524C; --faint:#6E6A63;
+  --rule:#DCD9D2; --hair:#C7C3BA;
+
+  /* ---- interaction. The brand red does this and nothing else. ---- */
+  --brand:#EA0001; --brand-deep:#B81010; --brand-wash:#FBE9E6;
+  --brand-text:#B81010;   /* red on a light ground: 5.69:1. --brand is 3.94:1 and fails. */
+  --brand-fill:#B81010; --brand-fill-hover:#8E0C0C;  /* white on these: 6.73:1 */
+
+  /* ---- status. Separate from the brand on purpose. ---- */
+  --good:#1E6B41; --good-wash:#E2EFE7;
+  --warn:#8A5A15; --warn-wash:#F6EDDD;
+  --bad:#A62016;  --bad-wash:#F8E7E4;
+
   --f:'Archivo','Helvetica Neue',Arial,sans-serif;
   --m:'JetBrains Mono','SF Mono',Menlo,monospace;
-  --bar:64px;
+
+  /* ---- one modular scale, used everywhere ---- */
+  --t11:11px; --t12:12px; --t13:13px; --t14:14px; --t15:15px;
+  --t17:17px; --t20:20px; --t26:26px; --t34:34px; --t46:46px;
+
+  /* ---- 4pt spacing ---- */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:20px; --s6:24px; --s8:32px; --s10:40px;
+
+  --r:8px; --r-sm:5px;
+  --bar:60px; --rail:212px;
+  --shadow:0 1px 2px rgba(20,18,15,.05), 0 6px 18px -8px rgba(20,18,15,.14);
 }
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --ground:#141310; --raise:#1D1B17; --sink:#0E0D0B; --ink:#EDECE8;
-  --muted:#A19C93; --faint:#847F76; --rule:#2E2B25; --hair:#3A362F;
-  --red:#FF3B33; --red-deep:#FF6259; --red-wash:#2B1512;
-  --go:#7FC79A; --go-wash:#16241C; --warn:#D9A05B; --warn-wash:#2A2015;
+  --ground:#131210; --surface:#1B1917; --sunk:#0D0C0B; --raise:#221F1C;
+  --ink:#EFEEEA; --muted:#A39E95; --faint:#918C82;
+  --rule:#2A2723; --hair:#3B372F;
+  --brand:#FF453A; --brand-deep:#FF6A61; --brand-wash:#2B1512;
+  --brand-text:#FF453A;  /* 5.56:1 on the dark ground, so the bright cut is fine here */
+  --brand-fill:#C4291F; --brand-fill-hover:#D8382C;  /* white on #FF453A is 3.41:1; on this, 5.70:1 */
+  --good:#63C68C; --good-wash:#15251C;
+  --warn:#DCA45F; --warn-wash:#2A2015;
+  --bad:#FF7268;  --bad-wash:#2C1614;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px -10px rgba(0,0,0,.6);
 }}
 :root[data-theme="dark"]{
-  --ground:#141310; --raise:#1D1B17; --sink:#0E0D0B; --ink:#EDECE8;
-  --muted:#A19C93; --faint:#847F76; --rule:#2E2B25; --hair:#3A362F;
-  --red:#FF3B33; --red-deep:#FF6259; --red-wash:#2B1512;
-  --go:#7FC79A; --go-wash:#16241C; --warn:#D9A05B; --warn-wash:#2A2015;
+  --ground:#131210; --surface:#1B1917; --sunk:#0D0C0B; --raise:#221F1C;
+  --ink:#EFEEEA; --muted:#A39E95; --faint:#918C82;
+  --rule:#2A2723; --hair:#3B372F;
+  --brand:#FF453A; --brand-deep:#FF6A61; --brand-wash:#2B1512;
+  --brand-text:#FF453A;  /* 5.56:1 on the dark ground, so the bright cut is fine here */
+  --brand-fill:#C4291F; --brand-fill-hover:#D8382C;  /* white on #FF453A is 3.41:1; on this, 5.70:1 */
+  --good:#63C68C; --good-wash:#15251C;
+  --warn:#DCA45F; --warn-wash:#2A2015;
+  --bad:#FF7268;  --bad-wash:#2C1614;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 22px -10px rgba(0,0,0,.6);
 }
+
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0}
 body{
   background:var(--ground); color:var(--ink); font-family:var(--f);
-  font-size:15px; line-height:1.45; -webkit-font-smoothing:antialiased;
+  font-size:var(--t14); line-height:1.5; -webkit-font-smoothing:antialiased;
   padding-bottom:calc(var(--bar) + env(safe-area-inset-bottom,0px));
 }
-.wrap{max-width:940px;margin:0 auto;padding-inline:16px}
-h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.015em;text-wrap:balance}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:var(--s4)}
+h1,h2,h3{margin:0;font-weight:640;letter-spacing:-.018em;text-wrap:balance}
 button,input,select,textarea{font:inherit;color:inherit}
-a{color:var(--red)}
-:focus-visible{outline:2px solid var(--red);outline-offset:2px;border-radius:3px}
-.mono{font-family:var(--m);font-variant-numeric:tabular-nums}
+a{color:var(--brand-text);text-underline-offset:2px}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:3px}
 [hidden]{display:none!important}
+svg{display:block}
+.i{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;
+   stroke-linecap:round;stroke-linejoin:round;flex:none}
+.i.sm{width:15px;height:15px;stroke-width:1.9}
 
-/* ---- top ---- */
+/* figures are tabular everywhere they are figures */
+.mono,.num{font-family:var(--m);font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
+
+/* ---------------------------------------------------------------- chrome --- */
 header.top{
   position:sticky;top:0;z-index:20;background:var(--ground);
   border-bottom:1px solid var(--rule);
-  padding-block:12px 10px;
 }
-.top .wrap{display:flex;align-items:center;gap:12px}
-.brand{font-size:15px;font-weight:700;letter-spacing:-.02em;margin-right:auto}
-.brand em{font-style:normal;color:var(--red)}
-.stamp{font-family:var(--m);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+.top .wrap{display:flex;align-items:center;gap:var(--s2);min-height:54px}
+.brand{
+  font-size:var(--t15);font-weight:700;letter-spacing:-.025em;margin-right:auto;
+  display:flex;align-items:center;gap:var(--s2);
+}
+.brand em{font-style:normal;color:var(--brand-text)}
+.stamp{
+  font-family:var(--m);font-size:var(--t11);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--faint);white-space:nowrap;
+}
 .iconbtn{
-  background:none;border:1px solid var(--hair);border-radius:5px;
+  background:none;border:1px solid var(--hair);border-radius:var(--r-sm);
   width:34px;height:34px;display:grid;place-items:center;cursor:pointer;
-  font-size:14px;color:var(--muted);flex:none;
+  color:var(--muted);flex:none;transition:background .16s ease,color .16s ease,border-color .16s ease;
 }
-.iconbtn:active{background:var(--sink)}
+.iconbtn:hover{color:var(--ink);border-color:var(--muted);background:var(--surface)}
+.iconbtn:active{background:var(--sunk)}
+.iconbtn[aria-current="page"]{color:var(--brand-text);border-color:var(--brand)}
 
-/* ---- bottom nav ---- */
+/* ---------------------------------------------------------------- nav ------ */
 nav.tabs{
   position:fixed;left:0;right:0;bottom:0;z-index:30;
-  background:var(--raise);border-top:1px solid var(--hair);
+  background:var(--surface);border-top:1px solid var(--hair);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
-nav.tabs .wrap{display:flex;gap:0;padding-inline:4px}
+nav.tabs .wrap{display:flex;gap:0;padding-inline:var(--s1)}
 nav.tabs button{
-  flex:1;background:none;border:0;cursor:pointer;padding:9px 2px 10px;
+  flex:1;background:none;border:0;cursor:pointer;padding:7px 2px 8px;
   display:flex;flex-direction:column;align-items:center;gap:3px;
-  font-family:var(--m);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--faint);border-top:2px solid transparent;margin-top:-1px;min-height:var(--bar);
-  justify-content:center;
+  font-family:var(--m);font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--muted);min-height:var(--bar);justify-content:center;
+  position:relative;transition:color .16s ease;
 }
-nav.tabs button .g{font-size:17px;line-height:1;font-family:var(--f);font-weight:600;letter-spacing:0}
-nav.tabs button[aria-current="page"]{color:var(--red);border-top-color:var(--red)}
+nav.tabs button::before{
+  content:"";position:absolute;top:0;left:22%;right:22%;height:2px;
+  background:var(--brand);border-radius:0 0 2px 2px;transform:scaleX(0);
+  transition:transform .18s ease;
+}
+nav.tabs button[aria-current="page"]{color:var(--brand-text)}
+nav.tabs button[aria-current="page"]::before{transform:scaleX(1)}
+/* the sixth destination is not a peer of the five: it lives in the header */
+nav.tabs button[data-tab="notes"]{display:none}
 
-/* ---- generic ---- */
-section.view{padding-block:18px 26px}
-.vh{display:flex;align-items:baseline;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-.vh h2{font-size:23px}
-.vh .sub{font-family:var(--m);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
-.card{background:var(--raise);border:1px solid var(--hair);border-radius:7px;padding:14px 15px;margin-bottom:10px}
-.card.tight{padding:11px 13px}
-.rowsplit{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-.lbl{font-family:var(--m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
-.big{font-size:30px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.05}
-.big.sm{font-size:22px}
-.pos{color:var(--go)} .neg{color:var(--red)}
+/* ---------------------------------------------------------------- views --- */
+section.view{padding-block:var(--s5) var(--s8)}
+
+/* page head: what this is, what it is as of, what you can do here */
+.phead{
+  display:flex;align-items:baseline;gap:var(--s3);flex-wrap:wrap;
+  padding-bottom:var(--s3);margin-bottom:var(--s5);
+  border-bottom:1px solid var(--rule);
+}
+.phead h2{font-size:var(--t26);line-height:1.1}
+.phead .sub{
+  font-family:var(--m);font-size:var(--t11);letter-spacing:.07em;
+  text-transform:uppercase;color:var(--faint);
+}
+.phead .act{margin-left:auto;display:flex;gap:var(--s2);align-items:center}
+/* the old header, kept so nothing renders unstyled mid-migration */
+.vh{display:flex;align-items:baseline;gap:var(--s3);margin-bottom:var(--s4);flex-wrap:wrap}
+.vh h2{font-size:var(--t26)}
+.vh .sub{font-family:var(--m);font-size:var(--t11);letter-spacing:.07em;text-transform:uppercase;color:var(--faint)}
+
+/* ---- LEAD: the one answer a view exists to give. One per view. ---- */
+.lead{
+  background:var(--raise);border:1px solid var(--hair);border-radius:var(--r);
+  padding:var(--s5) var(--s5) var(--s4);margin-bottom:var(--s4);box-shadow:var(--shadow);
+}
+.lead .fig{font-size:var(--t46);font-weight:700;letter-spacing:-.035em;line-height:1;
+           font-family:var(--m);font-variant-numeric:tabular-nums}
+.lead .cap{margin-top:6px;font-size:var(--t13);color:var(--muted)}
+.hero{background:var(--raise);border:1px solid var(--hair);border-radius:var(--r);
+      padding:var(--s5);margin-bottom:var(--s4);box-shadow:var(--shadow)}
+.hero .big{font-size:var(--t46)}
+
+/* ---- BAND: hairline KPI cells. Not cards: they are one object. ---- */
+.stats{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);
+  overflow:hidden;margin-bottom:var(--s4);
+}
+.stats>*{
+  padding:var(--s4) var(--s4);margin:0;background:none;border:0;border-radius:0;
+  border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);min-width:0;
+}
+.stats>*:nth-child(2n){border-right:0}
+.stats>*:nth-last-child(-n+2){border-bottom:0}
+.stat,.stats .card{background:none}
+
+.lbl{
+  font-family:var(--m);font-size:var(--t11);letter-spacing:.085em;
+  text-transform:uppercase;color:var(--faint);
+}
+.big{
+  font-size:var(--t34);font-weight:700;letter-spacing:-.03em;line-height:1.05;
+  font-family:var(--m);font-variant-numeric:tabular-nums;margin-top:2px;
+}
+.big.sm{font-size:var(--t26)}
+.tiny{font-size:var(--t12);line-height:1.42}
 .muted{color:var(--muted)} .faint{color:var(--faint)}
-.tiny{font-size:12.5px;line-height:1.4}
-.stack{display:grid;gap:10px}
-.two{display:grid;gap:10px;grid-template-columns:1fr 1fr}
-@media(max-width:430px){.two{grid-template-columns:1fr}}
+.pos{color:var(--good)} .neg{color:var(--bad)}
+/* A negative figure is the normal case on this desk, so it is set in ink with a
+   real minus. .neg stays for the few places a number really is an alarm. */
+.fig-neg{color:var(--ink)}
+
+/* ---------------------------------------------------------------- surfaces */
+/* PANEL: hairline-ruled content. The default. */
+.panel{
+  background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);
+  padding:var(--s4);margin-bottom:var(--s3);
+}
+/* CARD kept as an alias so existing markup renders, but quieter than before. */
+.card{
+  background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);
+  padding:var(--s4);margin-bottom:var(--s3);
+}
+.card.tight{padding:var(--s3)}
+.rowsplit{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s3)}
+.stack{display:grid;gap:var(--s3)}
+.two{display:grid;gap:var(--s3);grid-template-columns:1fr 1fr}
+@media(max-width:460px){.two{grid-template-columns:1fr}}
+
+/* The context line drops to its own row rather than squeezing the heading into
+   "Where the". nowrap on the count is what forces the wrap instead of a squeeze. */
+.colhead{display:flex;align-items:baseline;gap:var(--s3);margin:var(--s6) 0 var(--s3);flex-wrap:wrap}
+.colhead h3{font-size:var(--t17);min-width:0}
+.colhead .n{font-family:var(--m);font-size:var(--t11);letter-spacing:.07em;
+            color:var(--faint);text-transform:uppercase;margin-left:auto;
+            text-align:right;white-space:nowrap}
+
+/* ---------------------------------------------------------------- pills --- */
 .pill{
-  display:inline-flex;align-items:center;gap:5px;font-family:var(--m);
-  font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-  padding:3px 7px;border-radius:3px;background:var(--sink);color:var(--muted);white-space:nowrap;
+  display:inline-flex;align-items:center;gap:4px;font-family:var(--m);
+  font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+  padding:3px 6px;border-radius:3px;background:var(--sunk);color:var(--muted);
+  white-space:nowrap;border:1px solid transparent;
 }
-.pill.go{background:var(--go-wash);color:var(--go)}
+.pill.go{background:var(--good-wash);color:var(--good)}
 .pill.warn{background:var(--warn-wash);color:var(--warn)}
-.pill.crit{background:var(--red-wash);color:var(--red-deep)}
+.pill.crit{background:var(--bad-wash);color:var(--bad)}
+.pill.live{background:var(--brand-wash);color:var(--brand-deep)}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;flex:none}
+
+/* ---------------------------------------------------------------- buttons - */
 .btn{
-  background:var(--red);color:#fff;border:0;border-radius:6px;
-  padding:12px 16px;font-weight:600;font-size:15px;cursor:pointer;min-height:44px;
+  background:var(--brand-fill);color:#fff;border:0;border-radius:var(--r-sm);
+  padding:11px 16px;font-weight:600;font-size:var(--t14);cursor:pointer;
+  min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:var(--s2);
+  transition:background .16s ease,transform .1s ease;
 }
-.btn:active{background:var(--red-deep)}
+.btn:hover{background:var(--brand-fill-hover)}
+.btn:active{transform:translateY(1px)}
 .btn.ghost{background:none;color:var(--ink);border:1px solid var(--hair)}
-.btn.ghost:active{background:var(--sink)}
-.btn.sm{padding:8px 12px;font-size:13.5px;min-height:38px}
-.btn:disabled{opacity:.45;cursor:default}
-.field{display:block;margin-bottom:11px}
-.field span{display:block;font-family:var(--m);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:5px}
+.btn.ghost:hover{background:var(--surface);border-color:var(--muted)}
+.btn.sm{padding:8px 12px;font-size:var(--t13);min-height:38px}
+.btn:disabled{opacity:.45;cursor:default;transform:none}
+
+/* ---------------------------------------------------------------- forms --- */
+.field{display:block;margin-bottom:var(--s3)}
+.field span{display:block;font-family:var(--m);font-size:var(--t11);letter-spacing:.085em;
+            text-transform:uppercase;color:var(--faint);margin-bottom:5px}
 .field input,.field select,.field textarea{
-  width:100%;background:var(--ground);border:1px solid var(--hair);border-radius:6px;
-  padding:11px 12px;min-height:44px;font-size:16px;
+  width:100%;background:var(--ground);border:1px solid var(--hair);border-radius:var(--r-sm);
+  padding:11px 12px;min-height:44px;font-size:16px;transition:border-color .16s ease;
 }
-.field textarea{min-height:76px;resize:vertical;font-size:15px}
-.inline{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.msg{padding:10px 12px;border-radius:6px;font-size:13.5px;margin-bottom:12px}
-.msg.err{background:var(--red-wash);color:var(--red-deep)}
-.msg.ok{background:var(--go-wash);color:var(--go)}
-.empty{text-align:center;padding:34px 16px;color:var(--faint);font-size:14px}
-.spin{display:inline-block;width:13px;height:13px;border:2px solid var(--hair);border-top-color:var(--red);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px}
+.field input:hover,.field select:hover,.field textarea:hover{border-color:var(--muted)}
+.field textarea{min-height:80px;resize:vertical;font-size:var(--t15)}
+.inline{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3)}
+.msg{padding:10px 12px;border-radius:var(--r-sm);font-size:var(--t13);margin-bottom:var(--s3)}
+.msg.err{background:var(--bad-wash);color:var(--bad)}
+.msg.ok{background:var(--good-wash);color:var(--good)}
+.empty{text-align:center;padding:var(--s5) var(--s4);color:var(--faint);font-size:var(--t13)}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid var(--hair);
+      border-top-color:var(--brand);border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px}
 @keyframes sp{to{transform:rotate(360deg)}}
-@media(prefers-reduced-motion:reduce){.spin{animation:none}}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
 
-/* ---- stats strip ---- */
-.stats{display:grid;gap:10px;grid-template-columns:repeat(2,1fr);margin-bottom:10px}
-.stats .card{margin:0}
-.cols{display:grid;gap:10px}
-.colhead{display:flex;align-items:baseline;gap:10px;margin:20px 0 10px}
-.colhead h3{font-size:17px}
-.colhead .n{font-family:var(--m);font-size:10.5px;letter-spacing:.08em;color:var(--faint);text-transform:uppercase}
+/* ---------------------------------------------------- the data grid ------- */
+/* Replaces the old dotted flex rows. A fixed right-hand track is the whole
+   point: figures line up with each other instead of with their own labels. */
+.ledger{font-size:var(--t14)}
+.ledger>div{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s3);
+  align-items:baseline;padding:9px 0;border-bottom:1px solid var(--rule);
+  font-family:var(--m);font-variant-numeric:tabular-nums;font-size:var(--t13);
+}
+.ledger>div:last-child{border-bottom:0}
+.ledger .k{
+  font-family:var(--f);font-size:var(--t14);color:var(--muted);
+  font-variant-numeric:normal;min-width:0;
+}
+.ledger>div>span:last-child{text-align:right;white-space:nowrap;font-weight:600;color:var(--ink)}
+.ledger .tot{
+  border-top:1.5px solid var(--ink);border-bottom:0!important;margin-top:var(--s1);
+  padding-top:11px;font-size:var(--t17);
+}
+.ledger .tot .k{font-family:var(--f);font-weight:700;font-size:var(--t15);color:var(--ink)}
+.ledger .tot>span:last-child{font-weight:700}
 
-/* ============ DESKTOP: side rail, real columns ============ */
-@media(min-width:900px){
-  body{padding-bottom:0;padding-left:206px}
-  .wrap{max-width:1120px;padding-inline:26px}
+/* ---------------------------------------------------- worklist rows ------- */
+.wrow{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px var(--s3);
+  padding:var(--s3) var(--s2);margin-inline:calc(var(--s2) * -1);
+  border-radius:var(--r-sm);border-bottom:1px solid var(--rule);cursor:pointer;
+  transition:background .15s ease;
+}
+.wrow:hover{background:var(--sunk)}
+.wrow:last-child{border-bottom:0}
+.wrow .t{font-weight:600;font-size:var(--t15);line-height:1.3;min-width:0}
+.wrow .s{font-size:var(--t12);color:var(--muted);grid-column:1/-1;
+         display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+/* An inline link inside a row cannot be 44px tall without wrecking the row, so
+   the hit area is extended past the ink instead of the ink being made bigger. */
+.wrow .s a{padding-block:11px;margin-block:-11px}
+.wrow .amt{font-family:var(--m);font-weight:700;font-size:var(--t15);white-space:nowrap;
+           font-variant-numeric:tabular-nums}
+.age{font-family:var(--m);font-size:var(--t11);font-weight:700;letter-spacing:.02em}
+.age.hot{color:var(--bad)}
+
+/* ---------------------------------------------------- tables -------------- */
+.gt{overflow-x:auto;margin-inline:calc(var(--s4) * -1);padding-inline:var(--s4)}
+.gt table{
+  border-collapse:collapse;width:100%;min-width:680px;
+  font-family:var(--m);font-size:var(--t12);font-variant-numeric:tabular-nums;
+}
+.gt th{
+  font-size:var(--t11);letter-spacing:.08em;text-transform:uppercase;color:var(--faint);
+  font-weight:500;text-align:right;padding:0 0 8px var(--s3);white-space:nowrap;
+  border-bottom:1px solid var(--hair);
+}
+.gt th:first-child,.gt td:first-child{text-align:left;padding-left:0}
+.gt td{text-align:right;padding:10px 0 10px var(--s3);border-bottom:1px solid var(--rule);white-space:nowrap}
+.gt tbody tr{transition:background .15s ease}
+.gt tbody tr:hover{background:var(--sunk)}
+.gt tbody tr:last-child td{border-bottom:0}
+.gt tr.tot td{border-top:1.5px solid var(--ink);border-bottom:0!important;font-weight:700;padding-top:11px}
+.gt tr.tot:hover{background:none}
+.gt .cname{font-family:var(--f);font-weight:600;font-size:var(--t13);white-space:normal;
+           min-width:160px;line-height:1.3}
+.gt .off td{color:var(--faint)}
+.gt .off .cname{color:var(--muted)}
+
+/* ---------------------------------------------------- chart --------------- */
+.chart{display:flex;gap:var(--s2);align-items:stretch;margin:var(--s2) 0 0}
+.ch-y{display:flex;flex-direction:column;justify-content:space-between;height:105px;
+      font-family:var(--m);font-size:var(--t11);color:var(--faint);text-align:right;flex:none}
+.ch-cols{display:flex;gap:6px;flex:1;align-items:flex-end;min-width:0;
+         border-bottom:1px solid var(--hair);padding-bottom:0}
+.ch-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
+/* No track behind the bar. A filled track at this width reads as a bar of a
+   second colour, so a quiet day looked like a tall grey column rather than a
+   short one. Bars grow off a baseline rule instead. */
+.ch-stack{width:100%;height:104px;display:flex;flex-direction:column;justify-content:flex-end;
+          border-radius:2px 2px 0 0;overflow:hidden;background:none;
+          transition:opacity .15s ease}
+.ch-col:hover .ch-stack{opacity:.78}
+.ch-stack span{display:block;width:100%}
+.ch-col em{font-style:normal;font-family:var(--m);font-size:var(--t11);color:var(--faint);white-space:nowrap}
+
+/* ---------------------------------------------------- proportion + progress */
+.bar{display:flex;height:12px;border-radius:3px;overflow:hidden;background:var(--sunk);margin:var(--s3) 0 var(--s3)}
+.bar span{display:block;height:100%}
+.key{display:flex;flex-wrap:wrap;gap:6px var(--s5);font-size:var(--t13)}
+.key i{font-style:normal;display:flex;align-items:center;gap:7px;color:var(--muted)}
+.key b{font-family:var(--m);color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
+.prog{height:6px;border-radius:3px;background:var(--sunk);overflow:hidden;margin:var(--s2) 0 6px}
+.prog span{display:block;height:100%;background:var(--brand);border-radius:3px}
+
+/* ---------------------------------------------------- groups -------------- */
+.grp{margin-bottom:var(--s2)}
+.grp>summary{
+  list-style:none;cursor:pointer;display:flex;justify-content:space-between;
+  align-items:center;gap:var(--s3);padding:var(--s3) var(--s4);
+  background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);
+  transition:background .15s ease,border-color .15s ease;
+}
+.grp>summary:hover{background:var(--sunk);border-color:var(--muted)}
+.grp[open]>summary{border-radius:var(--r) var(--r) 0 0;border-bottom:0}
+.grp>summary::-webkit-details-marker{display:none}
+.grp>summary::marker{content:""}
+.grp .gname{font-weight:600;font-size:var(--t15);display:flex;align-items:center;gap:9px;min-width:0}
+.grp .gamt{font-family:var(--m);font-weight:700;font-size:var(--t17);
+           font-variant-numeric:tabular-nums;white-space:nowrap}
+.gbody{border:1px solid var(--hair);border-top:0;border-radius:0 0 var(--r) var(--r);
+       padding:2px var(--s4) var(--s2);background:var(--surface)}
+.line{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px var(--s3);
+      padding:10px 0;border-bottom:1px solid var(--rule)}
+.line:last-child{border-bottom:0}
+.line .n{font-size:var(--t14);font-weight:500;line-height:1.3}
+.line .v{font-family:var(--m);font-size:var(--t13);font-variant-numeric:tabular-nums;
+         white-space:nowrap;font-weight:600}
+.line .e{grid-column:1/-1;font-size:var(--t11);color:var(--faint);display:flex;gap:6px;
+         flex-wrap:wrap;align-items:center;margin-top:2px}
+
+/* ---------------------------------------------------- catalogue ----------- */
+.search{position:relative;margin-bottom:var(--s3)}
+.search input{
+  width:100%;background:var(--surface);border:1px solid var(--hair);border-radius:var(--r);
+  padding:12px 14px 12px 40px;min-height:46px;font-size:16px;transition:border-color .16s ease;
+}
+.search input:hover{border-color:var(--muted)}
+.search .i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--faint)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 var(--s3)}
+.chip{
+  font-family:var(--m);font-size:var(--t11);font-weight:500;letter-spacing:.04em;
+  text-transform:uppercase;padding:11px 13px;border-radius:999px;border:1px solid var(--hair);
+  min-height:40px;display:inline-flex;align-items:center;
+  background:var(--surface);color:var(--muted);cursor:pointer;white-space:nowrap;
+  transition:background .15s ease,color .15s ease,border-color .15s ease;
+}
+.chip:hover{border-color:var(--muted);color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--brand-fill);border-color:var(--brand-fill);color:#fff}
+.pcard-h{display:flex;gap:var(--s3);align-items:flex-start;cursor:pointer}
+.pcard-h img{width:56px;height:56px;object-fit:cover;border-radius:var(--r-sm);flex:none;background:var(--sunk)}
+.pname{font-weight:600;font-size:var(--t14);line-height:1.25}
+/* 33px, not 44. The card body itself is the toggle and the name is the link;
+   a 44px link would swallow the row above it and make expanding variants a
+   precision tap instead. The two are separated in JS by closest("a"). */
+.pname a{color:inherit;text-decoration:none;border-bottom:1px solid transparent;
+         transition:color .15s ease;padding-block:8px;margin-block:-8px;display:inline-block}
+.pname a:hover{border-bottom-color:var(--brand);color:var(--brand-text)}
+.vtable{margin-top:var(--s3);border-top:1px solid var(--rule);font-family:var(--m);
+        font-size:var(--t12);line-height:1.45}
+.vrow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:var(--s2);padding:7px 0;
+      border-bottom:1px solid var(--rule);align-items:baseline}
+.vrow:last-child{border-bottom:0}
+.vrow .vt{color:var(--ink);min-width:0;overflow-wrap:anywhere}
+.vrow .vs{color:var(--faint);font-size:var(--t11)}
+.pcard{display:grid;grid-template-columns:58px minmax(0,1fr);gap:var(--s3);align-items:start}
+.pcard img{width:58px;height:58px;object-fit:cover;border-radius:var(--r-sm);background:var(--sunk);max-width:100%}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px var(--s3);font-size:var(--t13);margin-top:var(--s2)}
+.kv dt{color:var(--faint);font-family:var(--m);font-size:var(--t11);letter-spacing:.05em;
+       text-transform:uppercase;padding-top:2px}
+.kv dd{margin:0;font-family:var(--m);font-variant-numeric:tabular-nums;font-weight:500}
+
+/* ---------------------------------------------------- login --------------- */
+.gate{min-height:80vh;display:grid;place-items:center;padding:var(--s6) 0}
+.gate .box{width:100%;max-width:344px}
+.gate h1{font-size:var(--t34);margin-bottom:6px;letter-spacing:-.03em}
+.gate p{color:var(--muted);font-size:var(--t14);margin:0 0 var(--s5)}
+
+/* ---------------------------------------------------- detail -------------- */
+.back{
+  background:none;border:0;color:var(--brand-text);font-family:var(--m);font-size:var(--t11);
+  letter-spacing:.09em;text-transform:uppercase;padding:6px 0;cursor:pointer;
+  margin-bottom:var(--s2);display:inline-flex;align-items:center;gap:6px;
+}
+.sheet-h{display:flex;justify-content:space-between;align-items:flex-start;gap:var(--s3);margin-bottom:var(--s3)}
+.cols{display:grid;gap:var(--s3)}
+
+/* ============================ 760px: real KPI band ======================== */
+@media(min-width:760px){
+  .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .stats>*{border-bottom:0}
+  .stats>*:nth-child(2n){border-right:1px solid var(--rule)}
+  .stats>*:last-child{border-right:0}
+  .stats>*:nth-last-child(-n+2){border-bottom:0}
+}
+
+/* ============================ 1000px: side rail =========================== */
+@media(min-width:1000px){
+  body{padding-bottom:0;padding-left:var(--rail)}
+  .wrap{max-width:1180px;padding-inline:var(--s8)}
 
   nav.tabs{
-    top:0;right:auto;bottom:0;width:206px;
+    top:0;right:auto;bottom:0;width:var(--rail);
     border-top:0;border-right:1px solid var(--hair);
-    background:var(--sink);display:flex;flex-direction:column;padding-bottom:0;
+    background:var(--sunk);display:flex;flex-direction:column;padding-bottom:0;
   }
   nav.tabs::before{
     content:"Cheragh Desk";display:block;
-    font-family:var(--f);font-weight:700;font-size:15px;letter-spacing:-.02em;
-    padding:19px 20px 16px;color:var(--ink);border-bottom:1px solid var(--hair);
+    font-family:var(--f);font-weight:700;font-size:var(--t15);letter-spacing:-.025em;
+    padding:19px var(--s5) var(--s4);color:var(--ink);border-bottom:1px solid var(--hair);
   }
-  nav.tabs .wrap{
-    flex-direction:column;max-width:none;padding:10px 10px 0;gap:1px;display:flex;
-  }
+  nav.tabs .wrap{flex-direction:column;max-width:none;padding:var(--s3) var(--s3) 0;gap:2px;display:flex}
   nav.tabs button{
     flex:none;flex-direction:row;justify-content:flex-start;gap:11px;
-    min-height:40px;padding:9px 12px;border-top:0;margin-top:0;border-radius:6px;
-    font-size:12.5px;letter-spacing:.05em;text-align:left;
+    min-height:40px;padding:9px 11px;border-radius:var(--r-sm);
+    font-family:var(--f);font-size:var(--t14);font-weight:500;letter-spacing:0;
+    text-transform:none;text-align:left;
   }
-  nav.tabs button .g{font-size:14px;width:16px;text-align:center}
+  nav.tabs button[data-tab="notes"]{display:flex}
+  nav.tabs button::before{
+    top:50%;left:0;right:auto;bottom:auto;width:3px;height:18px;
+    transform:translateY(-50%) scaleY(0);border-radius:0 2px 2px 0;
+  }
   nav.tabs button:hover{background:var(--ground);color:var(--ink)}
-  nav.tabs button[aria-current="page"]{background:var(--ground);color:var(--red)}
+  nav.tabs button[aria-current="page"]{background:var(--ground);color:var(--brand-text);font-weight:600}
+  nav.tabs button[aria-current="page"]::before{transform:translateY(-50%) scaleY(1)}
 
-  header.top{padding-block:16px 14px}
+  header.top{background:var(--ground)}
   .top .brand{display:none}
   .top .wrap{justify-content:flex-end}
   .top .stamp{margin-right:auto}
 
-  section.view{padding-block:22px 40px}
-  .vh h2{font-size:27px}
+  section.view{padding-block:var(--s6) var(--s10)}
+  .phead{margin-bottom:var(--s6)}
+  .phead h2{font-size:30px}
 
-  .stats{grid-template-columns:repeat(4,1fr);gap:12px}
-  .cols{grid-template-columns:1.25fr 1fr;gap:26px;align-items:start}
+  .cols{grid-template-columns:1.35fr 1fr;gap:var(--s8);align-items:start}
   .colhead{margin-top:0}
-  .two{grid-template-columns:1fr 1fr}
+  .lead{padding:var(--s6) var(--s6) var(--s5)}
+  .lead .fig{font-size:56px}
 
-  /* the margins search is a table's worth of cards; give it two columns */
-  #pResults{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:10px;align-items:start}
+  #pResults{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));
+            gap:var(--s3);align-items:start}
   #pResults .card{margin:0}
-  @media(max-width:520px){ #pResults{grid-template-columns:1fr} }
-  #notesList{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:start}
+  #notesList{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);align-items:start}
   #notesList .card{margin:0}
-  #orderDetail{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:start}
+  #orderDetail{display:grid;grid-template-columns:1fr 1fr;gap:var(--s3);align-items:start}
   #orderDetail .back,#orderDetail .sheet-h{grid-column:1/-1}
   #orderDetail .card{margin:0}
 }
-@media(min-width:1280px){ .wrap{max-width:1240px} }
+@media(min-width:1400px){ .wrap{max-width:1300px} }
+@media(max-width:520px){ #pResults{grid-template-columns:1fr} }
 
-/* ---- catalogue -------------------------------------------------------------
-   These were written inside the 900px query, so a phone got unstyled filter
-   chips and an unstyled variant table, and three of them named --mono, --line
-   and --brand, which are not variables in this sheet. Both faults were silent:
-   an unknown custom property just resolves to nothing. */
-.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
-.chip{font-family:var(--m);font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;
-      padding:7px 10px;border-radius:999px;border:1px solid var(--hair);
-      background:var(--sink);color:var(--muted);cursor:pointer;white-space:nowrap}
-.chip:hover{border-color:var(--muted);color:var(--ink)}
-.chip[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
-.pcard-h{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
-.pcard-h img{width:56px;height:56px;object-fit:cover;border-radius:5px;flex:none;background:var(--sink)}
-.pname{font-weight:600;font-size:14px;line-height:1.25}
-.pname a{color:inherit;text-decoration:none;border-bottom:1px solid transparent}
-.pname a:hover{border-bottom-color:var(--red);color:var(--red)}
-.vtable{margin-top:10px;border-top:1px solid var(--rule);font-family:var(--m);font-size:12px;line-height:1.45}
-.vrow{display:grid;grid-template-columns:1fr auto auto;gap:8px;padding:7px 0;
-      border-bottom:1px solid var(--rule);align-items:baseline}
-.vrow:last-child{border-bottom:0}
-.vrow .vt{color:var(--ink);min-width:0;overflow-wrap:anywhere}
-.vrow .vs{color:var(--faint);font-size:11px}
-
-/* ---- stat tile -------------------------------------------------------------
-   costStats has always rendered .stat and nothing has ever styled it, so the
-   four headline numbers on the Costs tab floated on the page background with
-   no card under them. */
-.stat{background:var(--raise);border:1px solid var(--hair);border-radius:7px;padding:14px 15px}
-
-/* ---- a table that reads like Google's own ---------------------------------
-   Same column order Google Ads uses, so the two can be compared by eye without
-   translating. It scrolls sideways inside its own box; the page never does. */
-.gt{overflow-x:auto;margin:0 -15px;padding:2px 15px 0}
-.gt table{border-collapse:collapse;width:100%;min-width:680px;
-          font-family:var(--m);font-size:12.5px;font-variant-numeric:tabular-nums}
-.gt th{font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);
-       font-weight:500;text-align:right;padding:0 0 8px 12px;white-space:nowrap;
-       border-bottom:1px solid var(--hair)}
-.gt th:first-child,.gt td:first-child{text-align:left;padding-left:0}
-.gt td{text-align:right;padding:10px 0 10px 12px;border-bottom:1px solid var(--rule);white-space:nowrap}
-.gt tbody tr:last-child td{border-bottom:0}
-.gt tr.tot td{border-top:1px solid var(--ink);border-bottom:0!important;font-weight:700;padding-top:11px}
-.gt .cname{font-family:var(--f);font-weight:600;font-size:13.5px;white-space:normal;min-width:158px;line-height:1.3}
-.gt .off td{color:var(--faint)}
-.gt .off .cname{color:var(--muted)}
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px;flex:none}
-
-/* ---- daily chart, in divs rather than SVG ---------------------------------
-   An SVG scaled to the container scales its labels too, and at phone width the
-   axis became unreadable. Divs keep type at the size it was set. */
-.chart{display:flex;gap:9px;align-items:stretch;margin:6px 0 2px}
-.ch-y{display:flex;flex-direction:column;justify-content:space-between;height:104px;
-      font-family:var(--m);font-size:9.5px;color:var(--faint);text-align:right;flex:none}
-.ch-cols{display:flex;gap:5px;flex:1;align-items:flex-end;min-width:0}
-.ch-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;min-width:0}
-.ch-stack{width:100%;height:104px;display:flex;flex-direction:column;justify-content:flex-end;
-          border-radius:3px 3px 0 0;overflow:hidden;background:var(--sink)}
-.ch-stack span{display:block;width:100%}
-.ch-col em{font-style:normal;font-family:var(--m);font-size:9.5px;color:var(--faint);white-space:nowrap}
-
-/* ---- proportion bar and its key ---- */
-.bar{display:flex;height:13px;border-radius:3px;overflow:hidden;background:var(--sink);margin:13px 0 11px}
-.bar span{display:block;height:100%}
-.key{display:flex;flex-wrap:wrap;gap:7px 18px;font-size:12.5px}
-.key i{font-style:normal;display:flex;align-items:center;gap:7px;color:var(--muted)}
-.key b{font-family:var(--m);color:var(--ink);font-weight:600;font-variant-numeric:tabular-nums}
-
-/* ---- progress toward the point where a zero means something ---- */
-.prog{height:8px;border-radius:4px;background:var(--sink);overflow:hidden;margin:9px 0 7px}
-.prog span{display:block;height:100%;background:var(--red)}
-
-/* ---- grouped ledger, collapsed by default ---- */
-.grp{margin-bottom:8px}
-.grp>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;
-  align-items:baseline;gap:12px;padding:12px 14px;background:var(--raise);
-  border:1px solid var(--hair);border-radius:7px}
-.grp[open]>summary{border-radius:7px 7px 0 0;border-bottom:0}
-.grp>summary::-webkit-details-marker{display:none}
-.grp>summary::marker{content:""}
-.grp .gname{font-weight:600;font-size:14.5px;display:flex;align-items:center;min-width:0}
-.grp .gamt{font-family:var(--m);font-weight:700;font-size:15px;font-variant-numeric:tabular-nums;white-space:nowrap}
-.gbody{border:1px solid var(--hair);border-top:0;border-radius:0 0 7px 7px;
-  padding:2px 14px 8px;background:var(--raise)}
-.line{display:grid;grid-template-columns:1fr auto;gap:2px 12px;padding:10px 0;border-bottom:1px dotted var(--rule)}
-.line:last-child{border-bottom:0}
-.line .n{font-size:13.5px;font-weight:500;line-height:1.3}
-.line .v{font-family:var(--m);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap;font-weight:600}
-.line .e{grid-column:1/-1;font-size:11.5px;color:var(--faint);display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-top:1px}
-.hero{background:var(--raise);border:1px solid var(--hair);border-radius:7px;padding:17px 16px;margin-bottom:10px}
-.hero .big{font-size:38px}
-@media(min-width:900px){ .hero .big{font-size:46px} }
-
-/* ---- worklist rows ---- */
-.wrow{
-  display:grid;grid-template-columns:1fr auto;gap:4px 12px;
-  padding:12px 0;border-bottom:1px solid var(--rule);cursor:pointer;
-}
-.wrow:last-child{border-bottom:0}
-.wrow .t{font-weight:600;font-size:14.5px;line-height:1.3}
-.wrow .s{font-size:12.5px;color:var(--muted);grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.wrow .amt{font-family:var(--m);font-weight:700;font-size:15px;white-space:nowrap;font-variant-numeric:tabular-nums}
-.age{font-family:var(--m);font-size:11px;font-weight:700}
-.age.hot{color:var(--red)}
-
-/* ---- ledger ---- */
-.ledger{font-family:var(--m);font-size:13px;font-variant-numeric:tabular-nums}
-.ledger div{display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px dotted var(--rule)}
-.ledger div:last-child{border-bottom:0}
-.ledger .k{color:var(--muted);font-family:var(--f);font-size:13.5px}
-.ledger .tot{border-top:1px solid var(--ink);border-bottom:0!important;margin-top:5px;padding-top:9px;font-weight:700;font-size:16px}
-.ledger .tot .k{font-family:var(--f);font-weight:700;font-size:15px}
-
-/* ---- search ---- */
-.search{position:relative;margin-bottom:12px}
-.search input{width:100%;background:var(--raise);border:1px solid var(--hair);border-radius:7px;padding:12px 14px;min-height:46px;font-size:16px}
-.pcard{display:grid;grid-template-columns:58px 1fr;gap:12px;align-items:start}
-.pcard img{width:58px;height:58px;object-fit:cover;border-radius:5px;background:var(--sink);max-width:100%}
-.kv{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:13px;margin-top:8px}
-.kv dt{color:var(--faint);font-family:var(--m);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
-.kv dd{margin:0;font-family:var(--m);font-variant-numeric:tabular-nums;font-weight:500}
-
-/* ---- login ---- */
-.gate{min-height:78vh;display:grid;place-items:center;padding:24px 0}
-.gate .box{width:100%;max-width:340px}
-.gate h1{font-size:31px;margin-bottom:6px}
-.gate p{color:var(--muted);font-size:14px;margin:0 0 20px}
-
-/* ---- back ---- */
-.back{background:none;border:0;color:var(--red);font-family:var(--m);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:6px 0;cursor:pointer;margin-bottom:6px}
-.sheet-h{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
 </style>
 </head>
 <body>
 
+<!-- Icons. The nav used Unicode glyphs (▣ ▤ ▧ ◎ ◈ ✎), which are font-dependent,
+     render differently on every platform, carry no stroke weight of their own and
+     cannot be themed. One stroke family at 1.7, drawn once, referenced by <use>. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+  <symbol id="i-today" viewBox="0 0 24 24"><path d="M3 13h4l2.5 6 5-14 2.5 8h4"/></symbol>
+  <symbol id="i-orders" viewBox="0 0 24 24"><path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9"/></symbol>
+  <symbol id="i-costs" viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2"/><rect x="3" y="8" width="18" height="12" rx="2"/><path d="M16 14h2.5"/></symbol>
+  <symbol id="i-catalogue" viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.5"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.5"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.5"/></symbol>
+  <symbol id="i-ads" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3"/></symbol>
+  <symbol id="i-notes" viewBox="0 0 24 24"><path d="M12 20h8"/><path d="M16.5 3.6a2.1 2.1 0 0 1 3 3L8 18.1 4 19l.9-4z"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 3.5v6h-6"/></symbol>
+  <symbol id="i-theme" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 4.5 4.5"/></symbol>
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M15 19 8 12l7-7"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+</defs></svg>
+
 <!-- ============================ LOGIN ============================ -->
 <div id="gate" class="wrap gate">
   <form class="box" id="loginForm">
-    <h1>Cheragh <em style="color:var(--red);font-style:normal">Desk</em></h1>
+    <h1>Cheragh <em style="color:var(--brand);font-style:normal">Desk</em></h1>
     <p>One page for orders, costs and margins.</p>
     <div id="loginMsg"></div>
     <label class="field"><span>Email</span>
@@ -346,54 +582,66 @@ section.view{padding-block:18px 26px}
   <div class="wrap">
     <span class="brand">Cheragh <em>Desk</em></span>
     <span class="stamp" id="stamp"></span>
-    <button class="iconbtn" id="themeBtn" title="Theme" aria-label="Switch theme">◐</button>
-    <button class="iconbtn" id="refreshBtn" title="Refresh" aria-label="Refresh">↻</button>
+    <button class="iconbtn" id="notesBtn" title="Notes" aria-label="Shared notes">
+      <svg class="i sm"><use href="#i-notes"/></svg></button>
+    <button class="iconbtn" id="themeBtn" title="Theme" aria-label="Switch theme">
+      <svg class="i sm"><use href="#i-theme"/></svg></button>
+    <button class="iconbtn" id="refreshBtn" title="Refresh" aria-label="Refresh all data">
+      <svg class="i sm"><use href="#i-refresh"/></svg></button>
   </div>
 </header>
 
 <main>
   <!-- ---------------- TODAY ---------------- -->
   <section class="view wrap" id="v-today">
-    <div class="vh"><h2>Today</h2><span class="sub" id="todayStamp"></span></div>
+    <div class="phead"><h2>Today</h2><span class="sub" id="todayStamp"></span></div>
+
+    <!-- The one answer this page exists to give. Everything under it is a
+         component of this number or a thing you can do about it. -->
+    <div class="lead" id="todayLead">
+      <div class="lbl">Where the business stands</div>
+      <div class="fig" id="kNet">&mdash;</div>
+      <div class="cap" id="kNetNote">&mdash;</div>
+    </div>
 
     <div class="stats">
-      <div class="card">
-        <div class="lbl">Profit, real orders</div>
-        <div class="big" id="kProfit">&mdash;</div>
+      <div>
+        <div class="lbl">Gross profit</div>
+        <div class="big sm" id="kProfit">&mdash;</div>
         <div class="tiny faint" id="kProfitNote">before ads and overheads</div>
       </div>
-      <div class="card">
-        <div class="lbl">Spent this month</div>
-        <div class="big" id="kSpent">&mdash;</div>
-        <div class="tiny faint" id="kBurn">&mdash;</div>
+      <div>
+        <div class="lbl">Advertising</div>
+        <div class="big sm" id="kAds">&mdash;</div>
+        <div class="tiny faint" id="kAdsNote">&mdash;</div>
       </div>
-      <div class="card">
+      <div>
         <div class="lbl">Real orders</div>
-        <div class="big" id="kOrders">&mdash;</div>
+        <div class="big sm" id="kOrders">&mdash;</div>
         <div class="tiny faint" id="kOrdersNote">&mdash;</div>
       </div>
-      <div class="card">
-        <div class="lbl">Since the last one</div>
-        <div class="big" id="kDays">&mdash;</div>
-        <div class="tiny faint" id="kDaysNote">&mdash;</div>
+      <div>
+        <div class="lbl">Committed a month</div>
+        <div class="big sm" id="kBurnFig">&mdash;</div>
+        <div class="tiny faint" id="kBurn">&mdash;</div>
       </div>
     </div>
 
     <div class="cols">
       <div>
         <div class="colhead"><h3>Needs a supplier order</h3><span class="n" id="queueN"></span></div>
-        <div class="card" id="queueCard"><div class="empty">Loading<span class="spin" style="margin-left:8px"></span></div></div>
+        <div class="panel" id="queueCard"><div class="empty">Loading<span class="spin" style="margin-left:8px"></span></div></div>
 
         <div class="colhead"><h3>Waiting on a reply</h3><span class="n" id="adviceN"></span></div>
-        <div class="card" id="adviceCard"><div class="empty">&mdash;</div></div>
+        <div class="panel" id="adviceCard"><div class="empty">&mdash;</div></div>
       </div>
 
       <div>
-        <div class="colhead"><h3>Since the campaign started</h3></div>
-        <div class="card" id="cashCard"><div class="ledger" id="campaignLedger"></div></div>
+        <div class="colhead"><h3>Since the campaign started</h3><span class="n" id="kDays"></span></div>
+        <div class="panel" id="cashCard"><div class="ledger" id="campaignLedger"></div></div>
 
-        <div class="colhead"><h3>Is anything stale</h3></div>
-        <div class="card" id="freshCard"><div class="empty">&mdash;</div></div>
+        <div class="colhead"><h3>Is anything stale</h3><span class="n" id="kFresh"></span></div>
+        <div class="panel" id="freshCard"><div class="empty">&mdash;</div></div>
       </div>
     </div>
   </section>
@@ -401,7 +649,7 @@ section.view{padding-block:18px 26px}
   <!-- ---------------- ORDERS ---------------- -->
   <section class="view wrap" id="v-orders" hidden>
     <div id="orderList">
-      <div class="vh"><h2>Orders</h2><span class="sub" id="orderCount"></span></div>
+      <div class="phead"><h2>Orders</h2><span class="sub" id="orderCount"></span></div>
       <div class="card" id="ordersCard"><div class="empty">Loading<span class="spin" style="margin-left:8px"></span></div></div>
     </div>
     <div id="orderDetail" hidden></div>
@@ -409,9 +657,9 @@ section.view{padding-block:18px 26px}
 
   <!-- ---------------- COSTS ---------------- -->
   <section class="view wrap" id="v-costs" hidden>
-    <div class="vh"><h2>Costs</h2><span class="sub" id="costStamp">&mdash;</span></div>
+    <div class="phead"><h2>Costs</h2><span class="sub" id="costStamp">&mdash;</span></div>
 
-    <div id="costHero"><div class="hero"><div class="empty">Loading<span class="spin" style="margin-left:8px"></span></div></div></div>
+    <div id="costHero"><div class="lead"><div class="empty">Loading<span class="spin" style="margin-left:8px"></span></div></div></div>
     <div class="stats" id="costStats"></div>
 
     <div class="cols">
@@ -432,7 +680,7 @@ section.view{padding-block:18px 26px}
     </div>
 
     <div class="colhead"><h3>Add a cost by hand</h3></div>
-    <button class="btn ghost" id="addExpBtn" style="width:100%;margin-bottom:10px">Add an expense</button>
+    <button class="btn ghost" id="addExpBtn" style="width:100%;margin-bottom:10px"><svg class="i sm"><use href="#i-plus"/></svg>Add an expense</button>
     <form class="card" id="expForm" hidden>
       <div id="expMsg"></div>
       <label class="field"><span>What was it</span><input id="eName" required placeholder="Shopify Basic"></label>
@@ -465,8 +713,8 @@ section.view{padding-block:18px 26px}
 
   <!-- ---------------- PRODUCTS ---------------- -->
   <section class="view wrap" id="v-products" hidden>
-    <div class="vh"><h2>Catalogue</h2><span class="sub" id="pCount">&mdash;</span></div>
-    <div class="search"><input id="pSearch" type="search" placeholder="Search by name, e.g. Gudarz, or drum pendant" autocomplete="off"></div>
+    <div class="phead"><h2>Catalogue</h2><span class="sub" id="pCount">&mdash;</span></div>
+    <div class="search"><svg class="i sm"><use href="#i-search"/></svg><input id="pSearch" type="search" placeholder="Search by name, e.g. Gudarz, or drum pendant" autocomplete="off"></div>
     <div class="chips" id="pChips"></div>
     <div id="pResults"><div class="empty">Loading the catalogue<span class="spin" style="margin-left:8px"></span></div></div>
     <div id="pMore"></div>
@@ -474,7 +722,7 @@ section.view{padding-block:18px 26px}
 
   <!-- ---------------- ADS ---------------- -->
   <section class="view wrap" id="v-ads" hidden>
-    <div class="vh"><h2>Ads</h2><span class="sub" id="adsStamp">&mdash;</span></div>
+    <div class="phead"><h2>Ads</h2><span class="sub" id="adsStamp">&mdash;</span></div>
     <div id="adsHead"></div>
     <div id="adsChart"></div>
     <div id="adsTable"></div>
@@ -489,7 +737,7 @@ section.view{padding-block:18px 26px}
 
   <!-- ---------------- NOTES ---------------- -->
   <section class="view wrap" id="v-notes" hidden>
-    <div class="vh"><h2>Notes</h2><span class="sub">shared with both models</span></div>
+    <div class="phead"><h2>Notes</h2><span class="sub">shared with claude and chatgpt</span></div>
     <form class="card" id="noteForm">
       <label class="field"><span>Topic</span><input id="nTopic" required placeholder="VAT position"></label>
       <label class="field"><span>Note</span><textarea id="nBody" required placeholder="What was decided, and why."></textarea></label>
@@ -501,12 +749,12 @@ section.view{padding-block:18px 26px}
 
 <nav class="tabs">
   <div class="wrap">
-    <button data-tab="today"    aria-current="page"><span class="g">▣</span>Today</button>
-    <button data-tab="orders"><span class="g">▤</span>Orders</button>
-    <button data-tab="costs"><span class="g">▧</span>Costs</button>
-    <button data-tab="products"><span class="g">◎</span>Margins</button>
-    <button data-tab="ads"><span class="g">◈</span>Ads</button>
-    <button data-tab="notes"><span class="g">✎</span>Notes</button>
+    <button data-tab="today" aria-current="page"><svg class="i"><use href="#i-today"/></svg>Today</button>
+    <button data-tab="orders"><svg class="i"><use href="#i-orders"/></svg>Orders</button>
+    <button data-tab="costs"><svg class="i"><use href="#i-costs"/></svg>Costs</button>
+    <button data-tab="products"><svg class="i"><use href="#i-catalogue"/></svg>Catalogue</button>
+    <button data-tab="ads"><svg class="i"><use href="#i-ads"/></svg>Ads</button>
+    <button data-tab="notes"><svg class="i"><use href="#i-notes"/></svg>Notes</button>
   </div>
 </nav>
 </div>
@@ -640,6 +888,10 @@ function show(tab){
 document.querySelectorAll("nav.tabs button").forEach(b =>
   b.addEventListener("click", () => show(b.dataset.tab)));
 el("refreshBtn").addEventListener("click", () => boot());
+/* Six destinations, and the bottom bar holds five. Notes is the one that is not
+   a peer of the others: it is a shared log, not a view of the business. It keeps
+   its rail entry on desktop and moves into the header on a phone. */
+el("notesBtn").addEventListener("click", () => show("notes"));
 
 /* ============================================================
    RENDERERS
@@ -663,19 +915,20 @@ async function loadToday(){
   const profit = orders.reduce((a,o) => a + (+o.profit_gbp||0), 0);
   const anyEst = orders.some(o => o.cogs_source === "estimate");
   el("kProfit").textContent = gbp(profit);
-  el("kProfit").className = "big " + (profit>=0?"pos":"neg");
+  /* A result keeps its sign colour, because the sign is the whole point of it.
+     A cost does not: on this desk almost every figure is money going out, and
+     colouring all of them red made red mean nothing. */
+  el("kProfit").className = "big sm " + (profit>=0?"pos":"neg");
   /* Shopify Payments settles in euros, so the euro figure is the one that
      actually reaches the bank. Shown next to the pounds, never instead of. */
   el("kProfitNote").innerHTML = (anyEst
     ? 'before ads and overheads &middot; <span style="color:var(--warn)">some costs still estimated</span>'
     : "before ads and overheads") + ` &middot; <span class="mono">${eur(profit)}</span>`;
 
-  const thisMonth = (spent||[]).find(s => s.month === new Date().toISOString().slice(0,8)+"01");
-  el("kSpent").textContent = gbp0(thisMonth ? thisMonth.spent_gbp : 0);
-  el("kSpent").title = "Cash out this month, including costs shared with Elais that are not charged to Cheragh. The Costs tab splits them.";
   const b = (burn||[])[0];
+  el("kBurnFig").textContent = b && b.monthly_burn_gbp ? gbp0(b.monthly_burn_gbp) : "—";
   el("kBurn").textContent = b && b.daily_burn_gbp
-    ? `${gbp(b.daily_burn_gbp)} a day committed` : "no recurring costs entered yet";
+    ? `${gbp(b.daily_burn_gbp)} a day` : "no recurring costs entered yet";
 
   // Campaign ledger. Ads spend comes from ad_days when the script is running.
   const ads = await get("ad_days?select=cost_gbp,clicks,conversions,day&order=day.desc").catch(()=>[]);
@@ -711,7 +964,7 @@ async function loadToday(){
   el("campaignLedger").innerHTML = [
     row("Gross profit, real orders", gbp(profit), profit>=0?"pos":"neg"),
     (ads&&ads.length)
-      ? row("Advertising spent", gbp(adSpend), "neg")
+      ? row("Advertising spent", gbp(adSpend))
       : `<div><span class="k">Advertising spent</span><span class="faint">not reporting yet</span></div>`,
     (ads&&ads.length) ? row("Clicks", clicks.toLocaleString("en-GB")) : "",
     sess ? row("Visitors who arrived", sess.toLocaleString("en-GB")) : "",
@@ -724,15 +977,33 @@ async function loadToday(){
        expense has not happened, so charging it here would overstate the loss
        by more than four hundred pounds. cost_summary draws that line. */
     (CS.overhead_recognized_gbp != null)
-      ? row("Overheads consumed", gbp(CS.overhead_recognized_gbp), "neg") : "",
+      ? row("Overheads consumed", gbp(CS.overhead_recognized_gbp)) : "",
     (ads&&ads.length) ? `<div class="tot"><span class="k">Net</span><span class="${netAll>=0?'pos':'neg'}">${gbp(netAll)} <span class="faint" style="font-size:12px">${eur(netAll)}</span></span></div>` : "",
   ].join("");
 
   el("kOrders").textContent = String(orders.length);
   el("kOrdersNote").textContent = orders.length
     ? `${gbp0(orders.reduce((a,o)=>a+(+o.total_gbp||0),0))} taken` : "none yet";
-  el("kDays").textContent = daysSince==null ? "—" : (daysSince===0 ? "today" : daysSince+"d");
-  el("kDaysNote").textContent = last ? `${last.name}, ${esc(last.customer_name||"")}` : "no orders yet";
+  el("kAds").textContent = gbp0(adSpend);
+  el("kAdsNote").textContent = clicks
+    ? `${clicks.toLocaleString("en-GB")} clicks at ${gbp(adSpend/clicks)}` : "not reporting";
+
+  /* The lead. One figure, then the sentence that makes it readable: what it is
+     made of, and the one thing deliberately left out of it. */
+  el("kNet").textContent = gbp(netAll);
+  el("kNet").className = "fig " + (netAll>=0 ? "pos" : "");
+  const prep = +(CS.prepaid_gbp||0);
+  el("kNetNote").innerHTML =
+    `${gbp(profit)} earned on ${orders.length} real order${orders.length===1?"":"s"}, `
+    + `less ${gbp0(adSpend)} of advertising`
+    + (CS.overhead_recognized_gbp!=null ? ` and ${gbp0(CS.overhead_recognized_gbp)} of overheads` : "")
+    + `. <span class="mono">${eur(netAll)}</span>`
+    + (prep ? `<br><span class="faint">${gbp0(prep)} of prepaid credit is not counted against you: `
+              + `the cash has gone, the expense has not happened.</span>` : "");
+
+  el("kDays").textContent = daysSince==null ? "—"
+    : (daysSince===0 ? "last order today" : `last order ${daysSince}d ago`);
+
 
   // Worklist: paid, not test, no supplier order yet.
   const q = orders.filter(o =>
@@ -747,6 +1018,12 @@ async function loadToday(){
   // A block whose feed has stopped must say so rather than show an old number.
   try{
     const fresh = await get("data_freshness?select=*");
+    const lateN = fresh.filter(f => {
+      const age = f.last_seen ? (Date.now()-new Date(f.last_seen))/36e5 : null;
+      return age==null || age > (f.expected ? hoursOf(f.expected) : Infinity);
+    }).length;
+    el("kFresh").textContent = lateN ? `${lateN} late` : "all current";
+    el("kFresh").style.color = lateN ? "var(--bad)" : "";
     el("freshCard").innerHTML = `<div class="ledger">${fresh.map(f=>{
       const age = f.last_seen ? (Date.now()-new Date(f.last_seen))/36e5 : null;
       const cap = f.expected ? hoursOf(f.expected) : Infinity;
@@ -756,7 +1033,7 @@ async function loadToday(){
       return `<div><span class="k">${esc(f.feed)}</span><span class="${late?'neg':'faint'}">${txt}</span></div>`;
     }).join("")}</div>
     <p class="tiny faint" style="margin:9px 0 0">Red means the feed is past its expected interval. Numbers drawn from a red feed are old, not current.</p>`;
-  }catch{ el("freshCard").innerHTML = '<div class="empty">&mdash;</div>'; }
+  }catch{ el("freshCard").innerHTML = '<div class="empty">&mdash;</div>'; el("kFresh").textContent = ""; }
 
   el("adviceN").textContent = (advice||[]).length ? `${advice.length} waiting` : "clear";
   el("adviceCard").innerHTML = (advice||[]).length
@@ -832,7 +1109,7 @@ async function openOrder(oid){
   const LEAD = {"express":"14 to 20 days","made-to-order":"7 to 9 weeks","atelier":"10 to 12 weeks"};
 
   d.innerHTML = `
-    <button class="back" id="backBtn">&larr; All orders</button>
+    <button class="back" id="backBtn"><svg class="i sm"><use href="#i-back"/></svg>All orders</button>
     <div class="sheet-h">
       <div><h2 style="font-size:24px">${esc(O.name)}</h2>
         <div class="tiny muted">${esc(O.customer_name||"")} &middot; ${new Date(O.created_at).toLocaleDateString("en-GB",{day:"numeric",month:"long"})}</div></div>
@@ -975,10 +1252,10 @@ function feeName(x){
    any future query all read one definition. This function only lays it out. */
 
 const CGRP = {
-  ads:      { name:"Advertising",            hue:"var(--red)" },
+  ads:      { name:"Advertising",            hue:"var(--brand)" },
   prepaid:  { name:"Prepaid, not used yet",  hue:"var(--warn)" },
   overhead: { name:"Overheads",              hue:"var(--muted)" },
-  order:    { name:"Cost of the orders",     hue:"var(--go)" },
+  order:    { name:"Cost of the orders",     hue:"var(--good)" },
   shared:   { name:"Shared, not yours alone", hue:"var(--faint)" },
 };
 
@@ -1025,9 +1302,9 @@ async function loadCosts(){
   const verified = L.filter(r => r.verified).length;
 
   /* ---- the one number, then what it is made of ---- */
-  el("costHero").innerHTML = `<div class="hero">
+  el("costHero").innerHTML = `<div class="lead">
     <div class="lbl">What Cheragh has cost, all in</div>
-    <div class="big">${gbp(total)}</div>
+    <div class="fig">${gbp(total)}</div>
     <div class="tiny muted" style="margin-top:4px">
       ${eur(total)} &middot; since 16 August &middot;
       <span class="mono">${verified} of ${L.length}</span> lines backed by a named invoice</div>
@@ -1258,7 +1535,7 @@ function productCard(p){
   ].join(" ");
   return `<div class="card" data-pid="${p.product_id}">
     <div class="pcard-h" data-toggle="${p.product_id}">
-      ${p.image?`<img src="${esc(p.image)}" alt="" loading="lazy">`:'<div style="width:56px;height:56px;background:var(--sink);border-radius:5px;flex:none"></div>'}
+      ${p.image?`<img src="${esc(p.image)}" alt="" loading="lazy">`:'<div style="width:56px;height:56px;background:var(--sunk);border-radius:5px;flex:none"></div>'}
       <div style="min-width:0;flex:1">
         <div class="pname"><a href="${esc(p.url)}" target="_blank" rel="noopener"
              title="Open on cheragh.co.uk">${esc(p.shop_name||p.handle||"")}</a></div>
@@ -1393,11 +1670,13 @@ async function loadAds(){
     + (fresh < 1 ? "read minutes ago" : Math.round(fresh)+"h ago");
 
   /* ---- the account row, Google's own columns ---- */
+  /* A stale feed IS an alarm, so it keeps the danger treatment. It is one of
+     three things on this desk that get it. */
   el("adsHead").innerHTML =
     (fresh > 3 ? `<div class="msg err">Last reported ${Math.round(fresh)} hours ago. Treat these as stale.</div>` : "") +
-    `<div class="hero">
+    `<div class="lead">
       <div class="lbl">Spent since ${new Date(rows[0].day).toLocaleDateString("en-GB",{day:"numeric",month:"long"})}</div>
-      <div class="big">${gbp(spend)}</div>
+      <div class="fig">${gbp(spend)}</div>
       <div class="tiny muted" style="margin-top:4px">${eur(spend)} &middot;
         ${camps.length} campaign${camps.length>1?"s":""}, ${live.length} running</div>
       <div class="gt" style="margin-top:14px"><table><thead><tr>
@@ -1408,9 +1687,9 @@ async function loadAds(){
           <td>${impr?(100*clicks/impr).toFixed(2)+"%":"—"}</td>
           <td>${gbp(clicks?spend/clicks:0)}</td>
           <td>${gbp(spend)}</td>
-          <td class="${convs?"":"neg"}">${convs.toFixed(2)}</td>
+          <td>${convs.toFixed(2)}</td>
           <td>${cvalue?gbp(cvalue*EURGBP):"—"}</td>
-          <td class="${cvalue?"":"neg"}">${cvalue?(cvalue/(spend/EURGBP)).toFixed(2):"0.00"}</td>
+          <td>${cvalue?(cvalue/(spend/EURGBP)).toFixed(2):"0.00"}</td>
         </tr></tbody></table></div>
       <p class="tiny faint" style="margin:11px 0 0">Break-even ROAS on this catalogue is 2.58, not 2.
         Google scores conversion value on the price the shopper pays and a sixth of that is VAT that was never yours.</p>
@@ -1422,7 +1701,7 @@ async function loadAds(){
   /* --muted, not --hair: a bar in --hair sits on a --sink track and in dark mode
      the two are three shades apart, so the paused campaign's five days of spend
      read as an empty chart. */
-  const hue = c => (camps.find(x=>x.campaign===c)||{}).status === "ENABLED" ? "var(--red)" : "var(--muted)";
+  const hue = c => (camps.find(x=>x.campaign===c)||{}).status === "ENABLED" ? "var(--brand)" : "var(--muted)";
   const byDay = {};
   rows.forEach(r => { (byDay[r.day] = byDay[r.day] || {})[r.campaign] = +r.cost_gbp||0; });
   const dayTotal = d => order.reduce((a,c)=>a+((byDay[d]||{})[c]||0), 0);
@@ -1465,7 +1744,7 @@ async function loadAds(){
           <td>${c.ctr_pct!=null?(+c.ctr_pct).toFixed(2)+"%":"—"}</td>
           <td>${gbp(c.cpc_gbp)}</td>
           <td>${gbp(c.cost_gbp)}</td>
-          <td class="${(+c.conversions)?"":"neg"}">${(+c.conversions).toFixed(2)}</td>
+          <td>${(+c.conversions).toFixed(2)}</td>
           <td>${c.breakeven_cvr_pct!=null?(+c.breakeven_cvr_pct).toFixed(2)+"%":"—"}</td>
         </tr>`).join("")}
         <tr class="tot">
@@ -1503,7 +1782,7 @@ async function loadAds(){
         ${row("Spent", gbp(c.cost_gbp) + ' <span class="faint">' + eur(c.cost_gbp) + "</span>")}
         ${row("Clicks bought", n0(c.clicks) + ' <span class="faint">at ' + gbp(c.cpc_gbp) + " each</span>")}
         ${row("Break-even conversion rate", (+c.breakeven_cvr_pct).toFixed(2) + "%")}
-        ${row("Conversions Google claims", (+c.conversions).toFixed(2), (+c.conversions)?"":"neg")}
+        ${row("Conversions Google claims", (+c.conversions).toFixed(2))}
         ${on && c.budget ? row("Today so far",
             gbp(usedToday) + ' <span class="faint">of ' + gbp(budgetGbp) + " budget</span>",
             usedToday >= budgetGbp*0.95 ? "" : "warn") : ""}
@@ -1536,7 +1815,8 @@ async function loadAds(){
         ${meta.watch.map(x=>`<p class="tiny muted" style="margin:0 0 6px">${esc(x)}</p>`).join("")}</div>` : ""}
 
       <details style="margin-top:13px">
-        <summary class="lbl" style="cursor:pointer">Day by day</summary>
+        <summary class="lbl" style="cursor:pointer;min-height:44px;display:flex;align-items:center;gap:6px">
+          <svg class="i sm" style="width:13px;height:13px"><use href="#i-catalogue"/></svg>Day by day</summary>
         <div class="gt" style="margin-top:8px"><table>
           <thead><tr><th>Day</th><th>Impr.</th><th>Clicks</th><th>CTR</th><th>Avg CPC</th><th>Cost</th><th>Conv.</th></tr></thead>
           <tbody>${dayRows.slice().reverse().map(d => `<tr>

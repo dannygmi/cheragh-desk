@@ -591,10 +591,19 @@ async function loadToday(){
   const ads = await get("ad_days?select=cost_gbp,clicks,conversions,day&order=day.desc").catch(()=>[]);
   const adSpend = (ads||[]).reduce((a,d)=>a+(+d.cost_gbp||0),0);
   const clicks  = (ads||[]).reduce((a,d)=>a+(+d.clicks||0),0);
-  /* Sessions, not clicks. Google counts a click before the cookie banner and
-     Shopify counts a session after it, so clicks would flatter the rate. */
-  const front = await get("storefront_summary?select=*").catch(()=>[]);
-  const sess = front && front[0] ? +front[0].sessions || 0 : 0;
+  /* Sessions, not clicks: Google counts a click before the cookie banner and
+     Shopify counts a session after it, so clicks would flatter the rate.
+     The window has to match the numerator. Counting orders since the campaign
+     started against THIRTY DAYS of sessions swept in pre-campaign traffic and
+     read 0.1% when the campaign-era rate is nearer 0.26%. Understating
+     conversion is the direction that makes you switch off something working. */
+  const campStart = (ads && ads.length) ? ads[ads.length-1].day : null;
+  const days = await get("shop_days?select=day,sessions&order=day.asc").catch(()=>[]);
+  const sess = (days||[]).filter(d => !campStart || d.day >= campStart)
+                         .reduce((a,d) => a + (+d.sessions||0), 0);
+  const ordersSince = campStart
+    ? orders.filter(o => (o.created_at||"").slice(0,10) >= campStart).length
+    : orders.length;
   const last = orders.length ? orders[0] : null;
   const daysSince = last ? Math.floor((Date.now()-new Date(last.created_at))/864e5) : null;
   el("campaignLedger").innerHTML = [
@@ -604,8 +613,8 @@ async function loadToday(){
       : `<div><span class="k">Advertising spent</span><span class="faint">not reporting yet</span></div>`,
     (ads&&ads.length) ? row("Clicks", clicks.toLocaleString("en-GB")) : "",
     sess ? row("Visitors who arrived", sess.toLocaleString("en-GB")) : "",
-    sess ? row("Conversion rate", pct(100*orders.length/sess) + ' <span class="faint">vs 0.56% break-even</span>',
-               (orders.length/sess) >= 0.0056 ? "pos" : "neg") : "",
+    sess ? row("Conversion rate", pct(100*ordersSince/sess) + ' <span class="faint">vs 0.56% break-even</span>',
+               (ordersSince/sess) >= 0.0056 ? "pos" : "neg") : "",
     row("Days since the last order", daysSince==null?"—":String(daysSince)),
     (ads&&ads.length) ? `<div class="tot"><span class="k">Net</span><span class="${profit-adSpend>=0?'pos':'neg'}">${gbp(profit-adSpend)} <span class="faint" style="font-size:12px">${eur(profit-adSpend)}</span></span></div>` : "",
   ].join("");
@@ -986,13 +995,17 @@ async function loadAds(){
   const clicks = rows.reduce((a,r)=>a+(+r.clicks||0),0);
   const convs = rows.reduce((a,r)=>a+(+r.conversions||0),0);
   const fresh = (Date.now()-new Date(rows[0].imported_at))/36e5;
-  const front = await get("storefront_summary?select=*").catch(()=>[]);
-  const sess = front && front[0] ? +front[0].sessions || 0 : 0;
-  const real = (STATE.orders||[]).filter(o=>!o.is_test).length;
+  /* Same window as the spend above it, not a rolling thirty days. */
+  const campStart = rows[rows.length-1].day;
+  const days = await get("shop_days?select=day,sessions&order=day.asc").catch(()=>[]);
+  const sess = (days||[]).filter(d => d.day >= campStart)
+                         .reduce((a,d) => a + (+d.sessions||0), 0);
+  const real = (STATE.orders||[]).filter(o => !o.is_test
+                 && (o.created_at||"").slice(0,10) >= campStart).length;
   el("adsCard").innerHTML = `
     ${fresh>3?'<div class="msg err">Last reported '+Math.round(fresh)+' hours ago. Treat these as stale.</div>':""}
     <div class="ledger">
-      ${row("Spent, last 30 days", gbp(spend))}
+      ${row("Spent since " + new Date(campStart).toLocaleDateString("en-GB",{day:"numeric",month:"short"}), gbp(spend) + ' <span class="faint">' + eur(spend) + "</span>")}
       ${row("Clicks", clicks.toLocaleString("en-GB"))}
       ${row("Cost per click", gbp(clicks?spend/clicks:0))}
       ${row("Conversions Google claims", String(convs))}

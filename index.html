@@ -946,8 +946,6 @@ el("expForm").addEventListener("submit", async e => {
   }catch(err){ el("expMsg").innerHTML = `<div class="msg err">${esc(err.message)}</div>`; }
 });
 
-/* ---------- products ---------- */
-let pTimer;
 /* ------------------------------------------------------------------ catalogue
    One tab for browsing the catalogue AND reading its margins, which is what
    Danny asked for: the old version was search-only and returned a flat list of

@@ -317,20 +317,6 @@ section.view{padding-block:18px 26px}
   <!-- ---------------- COSTS ---------------- -->
   <section class="view wrap" id="v-costs" hidden>
     <div class="vh"><h2>Costs</h2></div>
-    <div class="two">
-      <div class="card">
-        <div class="lbl">Spent this month</div>
-        <div class="big sm" id="cSpent">&mdash;</div>
-        <div class="tiny faint">cash that actually left</div>
-      </div>
-      <div class="card">
-        <div class="lbl">Daily burn</div>
-        <div class="big sm" id="cBurn">&mdash;</div>
-        <div class="tiny faint" id="cBurnMo">run rate, not cash</div>
-      </div>
-    </div>
-    <p class="tiny faint" style="margin:-2px 0 14px">These two are never added together. One is money gone, the other is a rate.</p>
-
     <button class="btn" id="addExpBtn" style="width:100%;margin-bottom:12px">Add an expense</button>
 
     <form class="card" id="expForm" hidden>
@@ -357,6 +343,7 @@ section.view{padding-block:18px 26px}
     </form>
 
     <div class="stats" id="costStats"></div>
+    <p class="tiny faint" style="margin:-2px 0 14px">Cash and commitment are never added together. One is money gone, the other is a rate.</p>
 
     <div class="twocol">
       <div>
@@ -582,10 +569,6 @@ async function loadToday(){
   const b = (burn||[])[0];
   el("kBurn").textContent = b && b.daily_burn_gbp
     ? `${gbp(b.daily_burn_gbp)} a day committed` : "no recurring costs entered yet";
-  el("cSpent").textContent = gbp0(thisMonth ? thisMonth.spent_gbp : 0);
-  el("cBurn").textContent  = b && b.daily_burn_gbp ? gbp(b.daily_burn_gbp) : gbp(0);
-  el("cBurnMo").textContent = b && b.monthly_burn_gbp
-    ? `${gbp0(b.monthly_burn_gbp)} a month` : "run rate, not cash";
 
   // Campaign ledger. Ads spend comes from ad_days when the script is running.
   const ads = await get("ad_days?select=cost_gbp,clicks,conversions,day&order=day.desc").catch(()=>[]);

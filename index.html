@@ -356,21 +356,31 @@ section.view{padding-block:18px 26px}
       <p class="tiny faint" style="margin:10px 0 0">A recurring one is saved as a run rate and posts itself. A one off is saved as cash on that date.</p>
     </form>
 
-    <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">This month by category</h2></div>
-    <div class="card" id="catCard"><div class="empty">&mdash;</div></div>
+    <div class="stats" id="costStats"></div>
 
-    <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">Recent</h2></div>
-    <div class="card" id="entriesCard"><div class="empty">&mdash;</div></div>
+    <div class="twocol">
+      <div>
+        <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">Where it went this month</h2></div>
+        <div class="card" id="catCard"><div class="empty">&mdash;</div></div>
 
-    <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">Recurring</h2></div>
-    <div class="card" id="recurCard"><div class="empty">&mdash;</div></div>
+        <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">Recent payments</h2></div>
+        <div class="card" id="entriesCard"><div class="empty">&mdash;</div></div>
+      </div>
+      <div>
+        <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">Committed every month</h2></div>
+        <div class="card" id="recurCard"><div class="empty">&mdash;</div></div>
+
+        <div class="vh" style="margin-top:20px"><h2 style="font-size:18px">Advertising</h2></div>
+        <div class="card" id="adsCostCard"><div class="empty">&mdash;</div></div>
+      </div>
+    </div>
   </section>
 
   <!-- ---------------- PRODUCTS ---------------- -->
   <section class="view wrap" id="v-products" hidden>
     <div class="vh"><h2>Margins</h2><span class="sub">read only</span></div>
-    <div class="search"><input id="pSearch" type="search" placeholder="Search title, SKU or handle" autocomplete="off"></div>
-    <div id="pResults"><div class="empty">Type to search 2,890 offers.</div></div>
+    <div class="search"><input id="pSearch" type="search" placeholder="Search by name, e.g. copper wall light" autocomplete="off"></div>
+    <div id="pResults"><div class="empty">Type a name. 2,890 offers.</div></div>
   </section>
 
   <!-- ---------------- ADS ---------------- -->
@@ -417,7 +427,11 @@ section.view{padding-block:18px 26px}
    ============================================================ */
 const SB  = "https://tbmtznnpgibcwibxdvdq.supabase.co";
 const KEY = "sb_publishable_iN0Bm1oZKEhixkmBZNNS-A_lDhRnPmE";
-const EURGBP = 0.866;
+const EURGBP = 0.866;   /* multiply EUR by this to get GBP */
+/* Shopify Payments settles in euros, so euros are what actually lands in the
+   bank. Divide, never multiply: GBP 89.12 / 0.866 = EUR 102.91. */
+const eur = v => (v==null||v==="") ? "" : "\u20ac" + (Math.round((+v/EURGBP)*100)/100)
+  .toLocaleString("en-GB",{minimumFractionDigits:2,maximumFractionDigits:2});
 
 let TOK = null, REF = null, CATS = [], STATE = {};
 
@@ -557,9 +571,11 @@ async function loadToday(){
   const anyEst = orders.some(o => o.cogs_source === "estimate");
   el("kProfit").textContent = gbp(profit);
   el("kProfit").className = "big " + (profit>=0?"pos":"neg");
-  el("kProfitNote").innerHTML = anyEst
+  /* Shopify Payments settles in euros, so the euro figure is the one that
+     actually reaches the bank. Shown next to the pounds, never instead of. */
+  el("kProfitNote").innerHTML = (anyEst
     ? 'before ads and overheads &middot; <span style="color:var(--warn)">some costs still estimated</span>'
-    : "before ads and overheads";
+    : "before ads and overheads") + ` &middot; <span class="mono">${eur(profit)}</span>`;
 
   const thisMonth = (spent||[]).find(s => s.month === new Date().toISOString().slice(0,8)+"01");
   el("kSpent").textContent = gbp0(thisMonth ? thisMonth.spent_gbp : 0);
@@ -575,6 +591,10 @@ async function loadToday(){
   const ads = await get("ad_days?select=cost_gbp,clicks,conversions,day&order=day.desc").catch(()=>[]);
   const adSpend = (ads||[]).reduce((a,d)=>a+(+d.cost_gbp||0),0);
   const clicks  = (ads||[]).reduce((a,d)=>a+(+d.clicks||0),0);
+  /* Sessions, not clicks. Google counts a click before the cookie banner and
+     Shopify counts a session after it, so clicks would flatter the rate. */
+  const front = await get("storefront_summary?select=*").catch(()=>[]);
+  const sess = front && front[0] ? +front[0].sessions || 0 : 0;
   const last = orders.length ? orders[0] : null;
   const daysSince = last ? Math.floor((Date.now()-new Date(last.created_at))/864e5) : null;
   el("campaignLedger").innerHTML = [
@@ -583,8 +603,11 @@ async function loadToday(){
       ? row("Advertising spent", gbp(adSpend), "neg")
       : `<div><span class="k">Advertising spent</span><span class="faint">not reporting yet</span></div>`,
     (ads&&ads.length) ? row("Clicks", clicks.toLocaleString("en-GB")) : "",
+    sess ? row("Visitors who arrived", sess.toLocaleString("en-GB")) : "",
+    sess ? row("Conversion rate", pct(100*orders.length/sess) + ' <span class="faint">vs 0.56% break-even</span>',
+               (orders.length/sess) >= 0.0056 ? "pos" : "neg") : "",
     row("Days since the last order", daysSince==null?"—":String(daysSince)),
-    (ads&&ads.length) ? `<div class="tot"><span class="k">Net</span><span class="${profit-adSpend>=0?'pos':'neg'}">${gbp(profit-adSpend)}</span></div>` : "",
+    (ads&&ads.length) ? `<div class="tot"><span class="k">Net</span><span class="${profit-adSpend>=0?'pos':'neg'}">${gbp(profit-adSpend)} <span class="faint" style="font-size:12px">${eur(profit-adSpend)}</span></span></div>` : "",
   ].join("");
 
   el("kOrders").textContent = String(orders.length);
@@ -819,15 +842,54 @@ function feeName(x){
 /* ---------- costs ---------- */
 async function loadCosts(){
   const month = new Date().toISOString().slice(0,8)+"01";
-  const [cats, byCat, entries, recur] = await Promise.all([
+  const [cats, byCat, entries, recur, ads] = await Promise.all([
     get("expense_categories?select=*&active=eq.true&order=sort"),
     get(`expense_by_category?select=*&month=eq.${month}`),
     get("expense_entries?select=id,name,incurred_on,amount,currency,amount_gbp,source,category_id&order=incurred_on.desc&limit=25"),
     get("expenses?select=*&active=eq.true&order=amount_gbp.desc"),
+    /* Advertising is never retyped as an expense. It arrives hourly from the Ads
+       Script and is shown from ad_days, so it can neither drift from the real
+       number nor be counted twice. */
+    get("ad_days?select=cost_gbp,day&order=day.desc").catch(()=>[]),
   ]);
   CATS = cats;
   el("eCat").innerHTML = cats.map(c=>`<option value="${c.id}">${esc(c.name)}</option>`).join("");
   const byId = Object.fromEntries(cats.map(c=>[c.id,c.name]));
+
+  /* A run rate and a payment are different kinds of number and summing them
+     produces something true of nothing, so they are totalled separately and
+     labelled as what they are. */
+  const monthAds  = (ads||[]).filter(a => (a.day||"").slice(0,7) === month.slice(0,7))
+                             .reduce((t,a) => t + (+a.cost_gbp||0), 0);
+  const monthCash = (byCat||[]).reduce((t,c) => t + (+c.spent_gbp||0), 0);
+  const perMonth  = (recur||[]).reduce((t,r) => {
+    const n = {daily:30.44, weekly:4.348, fortnightly:2.174, monthly:1,
+               quarterly:1/3, annual:1/12, once:0}[r.frequency] ?? 0;
+    return t + (+r.amount_gbp||0) * n;
+  }, 0);
+
+  el("costStats").innerHTML = [
+    ["Paid out this month", gbp(monthCash + monthAds), eur(monthCash + monthAds),
+     "cash that actually left, advertising included"],
+    ["Advertising this month", gbp(monthAds), eur(monthAds),
+     "straight from Google, hourly"],
+    ["Committed every month", gbp(perMonth), eur(perMonth),
+     "a run rate, not a payment"],
+    ["Per day", gbp((perMonth + monthAds*30.44/(new Date().getDate()))/30.44), "",
+     "subscriptions plus advertising at today's pace"],
+  ].map(([k,v,e,note]) => `<div class="stat">
+      <div class="lbl">${esc(k)}</div>
+      <div class="big">${v}</div>
+      <div class="tiny faint">${e?esc(e)+" &middot; ":""}${esc(note)}</div>
+    </div>`).join("");
+
+  el("adsCostCard").innerHTML = monthAds
+    ? `<div class="ledger">
+         ${row("This month", gbp(monthAds) + ' <span class="faint">' + eur(monthAds) + "</span>")}
+         ${row("All time", gbp((ads||[]).reduce((t,a)=>t+(+a.cost_gbp||0),0)))}
+       </div>
+       <p class="tiny faint" style="margin:10px 0 0">Read from Google every hour. Do not also add it as an expense or it counts twice.</p>`
+    : '<div class="empty">Not reporting. The Ads Script has not run.</div>';
 
   el("catCard").innerHTML = (byCat||[]).length
     ? `<div class="ledger">${byCat.map(c=>row(esc(c.name), gbp(c.spent_gbp))).join("")}</div>`
@@ -841,7 +903,7 @@ async function loadCosts(){
 
   el("recurCard").innerHTML = (recur||[]).length
     ? `<div class="ledger">${recur.map(r=>
-        `<div><span class="k">${esc(r.name)} <span class="faint" style="font-size:11px">${esc(r.frequency)}</span></span><span>${gbp(r.amount_gbp)}</span></div>`).join("")}</div>`
+        `<div><span class="k">${esc(r.name)} <span class="faint" style="font-size:11px">${esc(r.frequency)}</span></span><span>${gbp(r.amount_gbp)} <span class="faint" style="font-size:11px">${eur(r.amount_gbp)}</span></span></div>`).join("")}</div>`
     : '<div class="empty">No recurring costs. Without these the daily burn reads zero, which is not true.</div>';
 }
 el("addExpBtn").addEventListener("click", () => {
@@ -877,20 +939,23 @@ let pTimer;
 el("pSearch").addEventListener("input", e => {
   clearTimeout(pTimer);
   const q = e.target.value.trim();
-  if(q.length < 2){ el("pResults").innerHTML = '<div class="empty">Type to search 2,890 offers.</div>'; return; }
+  if(q.length < 2){ el("pResults").innerHTML = '<div class="empty">Type a name. 2,890 offers.</div>'; return; }
   pTimer = setTimeout(() => searchProducts(q), 260);
 });
 async function searchProducts(q){
   el("pResults").innerHTML = `<div class="empty">Searching<span class="spin" style="margin-left:8px"></span></div>`;
-  const t = encodeURIComponent(`*${q}*`);
-  const rows = await get(`variant_economics?select=*&or=(title.ilike.${t},sku.ilike.${t},handle.ilike.${t})&limit=25`);
+  /* Split on spaces and join with wildcards, so "copper wall light" matches
+     "Brushed Copper Linear Wall Light". A single *phrase* could never match a
+     hyphenated handle, which is why searching by name used to find nothing. */
+  const t = encodeURIComponent("*" + q.split(/\s+/).filter(Boolean).join("*") + "*");
+  const rows = await get(`variant_economics?select=*&or=(display_name.ilike.${t},title.ilike.${t},sku.ilike.${t},handle.ilike.${t})&limit=25`);
   el("pResults").innerHTML = rows.length ? rows.map(p => `
     <div class="card">
       <div class="pcard">
         ${p.image?`<img src="${esc(p.image)}" alt="" loading="lazy">`:'<div style="width:58px;height:58px;background:var(--sink);border-radius:5px"></div>'}
         <div style="min-width:0">
-          <div style="font-weight:600;font-size:14px;line-height:1.3">${esc(p.variant_title||"")}</div>
-          <div class="tiny muted" style="margin-top:2px">${esc((p.title||"").slice(0,90))}</div>
+          <div style="font-weight:600;font-size:14px;line-height:1.3">${esc(p.display_name||"")}</div>
+          <div class="tiny muted" style="margin-top:2px">${esc(p.variant_title||"")}</div>
           <div class="tiny faint mono" style="margin-top:3px">${esc(p.sku||"")}</div>
         </div>
       </div>
@@ -921,14 +986,19 @@ async function loadAds(){
   const clicks = rows.reduce((a,r)=>a+(+r.clicks||0),0);
   const convs = rows.reduce((a,r)=>a+(+r.conversions||0),0);
   const fresh = (Date.now()-new Date(rows[0].imported_at))/36e5;
+  const front = await get("storefront_summary?select=*").catch(()=>[]);
+  const sess = front && front[0] ? +front[0].sessions || 0 : 0;
+  const real = (STATE.orders||[]).filter(o=>!o.is_test).length;
   el("adsCard").innerHTML = `
-    ${fresh>36?'<div class="msg err">Last reported '+Math.round(fresh)+' hours ago. Treat these as stale.</div>':""}
+    ${fresh>3?'<div class="msg err">Last reported '+Math.round(fresh)+' hours ago. Treat these as stale.</div>':""}
     <div class="ledger">
       ${row("Spent, last 30 days", gbp(spend))}
       ${row("Clicks", clicks.toLocaleString("en-GB"))}
       ${row("Cost per click", gbp(clicks?spend/clicks:0))}
       ${row("Conversions Google claims", String(convs))}
       ${row("Orders you actually got", String((STATE.orders||[]).filter(o=>!o.is_test).length))}
+      ${sess ? row("Visitors who arrived", sess.toLocaleString("en-GB")) : ""}
+      ${sess ? row("Conversion rate", pct(100*real/sess), (real/sess)>=0.0056?"pos":"neg") : ""}
       ${row("Break-even conversion rate", "0.56%")}
     </div>
     <p class="tiny faint" style="margin:10px 0 0">The last two are different numbers and are not reconciled. Google cannot claim an order whose visitor never accepted cookies.</p>`;
